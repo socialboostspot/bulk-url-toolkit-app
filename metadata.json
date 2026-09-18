@@ -1,0 +1,6 @@
+{
+  "name": "Bulk URL Toolkit",
+  "description": "Client-side utility for processing, cleaning, deduplicating, normalizing, and opening large lists of URLs locally in your browser.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
