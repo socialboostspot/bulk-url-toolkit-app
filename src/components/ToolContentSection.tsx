@@ -28,6 +28,7 @@ export const ToolContentSection: React.FC<ToolContentSectionProps> = ({ config, 
       {
         '@type': 'WebApplication',
         name: config.name,
+        url: `https://bulk-url-toolkit-app.socialboostspot.workers.dev${config.path === '/' ? '' : config.path}`,
         applicationCategory: 'UtilityApplication',
         operatingSystem: 'All',
         browserRequirements: 'Requires JavaScript. Works on all modern web browsers.',

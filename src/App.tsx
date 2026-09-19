@@ -78,6 +78,15 @@ export default function App() {
     if (ogDesc) {
       ogDesc.setAttribute('content', activePageConfig.metaDescription);
     }
+    const pageUrl = `https://bulk-url-toolkit-app.socialboostspot.workers.dev${activePageConfig.path === '/' ? '' : activePageConfig.path}`;
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) {
+      ogUrl.setAttribute('content', pageUrl);
+    }
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+      canonical.setAttribute('href', pageUrl);
+    }
   }, [activePageConfig]);
 
   const navigateTo = (path: string) => {

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bulkurltoolkit.com/sitemap.xml
+Sitemap: https://bulk-url-toolkit-app.socialboostspot.workers.dev/sitemap.xml
