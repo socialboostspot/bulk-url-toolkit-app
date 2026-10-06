@@ -158,7 +158,9 @@ export const ToolContentSection: React.FC<ToolContentSectionProps> = ({ config, 
                     {item.input}
                   </div>
                   <div className="bg-emerald-50/70 border border-emerald-200/70 text-emerald-900 p-2 rounded break-all">
-                    <span className="font-sans font-semibold text-emerald-700 block text-[10px] uppercase tracking-wider mb-0.5">Cleaned Output:</span>
+                    <span className="font-sans font-semibold text-emerald-700 block text-[10px] uppercase tracking-wider mb-0.5">
+                      {config.id === 'dedup' ? 'Deduplicated Output:' : 'Cleaned Output:'}
+                    </span>
                     {item.output}
                   </div>
                 </div>
@@ -168,17 +170,19 @@ export const ToolContentSection: React.FC<ToolContentSectionProps> = ({ config, 
         </section>
       )}
 
-      {/* What the Cleaner Does Not Change */}
+      {/* What the Tool Does Not Change */}
       {config.boundaries && config.boundaries.length > 0 && (
         <section className="bg-slate-50/70 rounded-2xl border border-slate-200 p-6 sm:p-8">
           <div className="flex items-center gap-2 mb-3">
             <Info className="w-5 h-5 text-blue-600" />
             <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-              What the Cleaner Does Not Change
+              {config.id === 'cleaner' ? 'What the Cleaner Does Not Change' : `What ${config.name} Does Not Change`}
             </h2>
           </div>
           <p className="text-xs text-slate-500 mb-6">
-            To prevent breaking intentional URL configurations, Bulk URL Cleaner restricts transformations strictly to formatting and whitespace hygiene:
+            {config.id === 'cleaner'
+              ? 'To prevent breaking intentional URL configurations, Bulk URL Cleaner restricts transformations strictly to formatting and whitespace hygiene:'
+              : `To preserve intended destination integrity, ${config.name} eliminates duplicate entries without modifying individual URL syntax or query parameters:`}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
@@ -279,7 +283,7 @@ export const ToolContentSection: React.FC<ToolContentSectionProps> = ({ config, 
           <p className="text-xs text-slate-500 mb-6">
             {config.id === 'opener'
               ? 'Bulk URL Opener launches your links for manual review. If your raw list contains duplicates, formatting errors, or unwanted tracking parameters, you can refine your data first with our companion utilities:'
-              : 'Different URL utilities handle specific tasks. Use these companion tools alongside Bulk URL Cleaner for a complete link hygiene workflow:'}
+              : `Different URL utilities handle specific tasks. Use these companion tools alongside ${config.name} for a complete link hygiene workflow:`}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">

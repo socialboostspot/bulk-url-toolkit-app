@@ -462,47 +462,179 @@ export const TOOL_PAGES: Record<string, ToolPageConfig> = {
     name: 'Duplicate URL Remover',
     shortTitle: 'Duplicate Remover',
     h1: 'Duplicate URL Remover – Remove Duplicate Links in Bulk',
-    metaTitle: 'Duplicate URL Remover – Remove Duplicate Links Instantly',
+    metaTitle: 'Duplicate URL Remover – Remove Duplicate Links in Bulk',
     metaDescription:
-      'Quickly find and eliminate duplicate URLs from lists of up to 5,000 links. Supports case-sensitive or insensitive matching with exact removal counts.',
+      'Remove duplicate URLs client-side in your browser. Eliminate repeated links, choose case sensitivity, preserve original order, and export unique lists.',
     summary:
-      'Deduplicate massive lists of URLs while preserving original appearance order. View exact counts of duplicates removed and export clean unique lists.',
+      'Deduplicate URL lists in bulk while preserving original sequence of first appearance and original casing. Compare web links case-insensitively or with exact case sensitivity entirely in your browser.',
     defaultAction: 'dedup',
+    aboutDetails: [
+      'Link collections compiled from web crawlers, XML sitemaps, analytics platforms, spreadsheet merges, and backlink audit exports frequently contain repeated URLs. Managing or distributing redundant links wastes review time, skews reporting metrics, and creates duplicate work.',
+      'Duplicate URL Remover streamlines your URL lists by eliminating repeated entries while strictly preserving the first occurrence of each web address and its original sequence of appearance. By default, URLs are compared case-insensitively (treating uppercase and lowercase variations as matching duplicates), with a toggle for exact case-sensitive matching when path capitalization is meaningful.',
+      'All deduplication runs entirely client-side in your web browser using JavaScript in memory. Your URL lists are processed directly on your device without being uploaded to our servers, keeping your data private.',
+    ],
+    examples: [
+      {
+        explanation:
+          'Identifies case-insensitive duplicates by default, preserving the first occurrence and its original casing',
+        input: 'https://example.com/products\nhttps://EXAMPLE.COM/products',
+        output: 'https://example.com/products',
+      },
+      {
+        explanation: 'Removes duplicate links while strictly preserving first-occurrence order',
+        input: 'https://example.com/blog\nhttps://example.com/contact\nhttps://example.com/blog',
+        output: 'https://example.com/blog\nhttps://example.com/contact',
+      },
+      {
+        explanation: 'Trims leading and trailing whitespace before comparison',
+        input: 'https://example.com/pricing\n   https://example.com/pricing   ',
+        output: 'https://example.com/pricing',
+      },
+      {
+        explanation: 'Treats distinct query parameters as separate unique URLs',
+        input: 'https://example.com/search?q=seo\nhttps://example.com/search?q=audit',
+        output: 'https://example.com/search?q=seo\nhttps://example.com/search?q=audit',
+      },
+    ],
+    boundaries: [
+      {
+        title: 'Does Not Normalize Protocols, Slashes, or Hostnames',
+        description:
+          'Protocol differences (http:// vs https://), path trailing slash variations (/page vs /page/), www vs non-www hostnames, URL fragments (#section1 vs #section2), and percent-encoded vs decoded representations remain different entries unless their complete comparison strings match under the selected case-sensitivity mode. Standardize variations with Bulk URL Normalizer first if needed.',
+      },
+      {
+        title: 'Does Not Strip Tracking Parameters (UTMs)',
+        description:
+          'URLs containing different query strings or tracking parameters are treated as distinct entries. Remove supported tracking parameters before deduplicating if you want differences caused only by those supported tracking parameters to no longer affect comparison.',
+      },
+      {
+        title: 'Does Not Reorder or Sort Your List',
+        description:
+          'Deduplication preserves the original sequence of first appearance for unique entries. The tool does not alphabetize, sort, or reorder links.',
+      },
+      {
+        title: 'Does Not Strip Zero-Width Characters',
+        description:
+          'The Deduplicator trims standard leading and trailing whitespace, but it does not strip zero-width characters. Use Bulk URL Cleaner first if those formatting artifacts need to be removed.',
+      },
+      {
+        title: 'Does Not Perform Syntax or Network Validation',
+        description:
+          'Any non-empty line—including arbitrary non-URL text—is deduplicated purely by string matching. The tool does not send network requests to check whether different URLs redirect to the same page or share the same canonical tag. Use Bulk URL Validator to check URL syntax and separate entries the toolkit identifies as valid or invalid.',
+      },
+      {
+        title: 'Retains First Occurrence After Trimming',
+        description:
+          'Standard leading and trailing whitespace is trimmed from the retained first occurrence; otherwise, it keeps its original casing and string content.',
+      },
+    ],
+    prepWorkflows: [
+      {
+        title: 'Clean Whitespace & Line Breaks',
+        description:
+          'Trim padding spaces, eliminate empty rows, encode unescaped spaces, and collapse duplicate path slashes.',
+        linkPath: '/url-cleaner',
+      },
+      {
+        title: 'Strip Marketing & UTM Tags',
+        description:
+          'Remove supported tracking parameters before deduplicating if you want differences caused only by those supported tracking parameters to no longer affect comparison.',
+        linkPath: '/utm-remover',
+      },
+      {
+        title: 'Normalize URL Structure',
+        description:
+          'Standardize schemes, lowercase hostnames, and align trailing slashes for consistent duplicate detection.',
+        linkPath: '/url-normalizer',
+      },
+      {
+        title: 'Validate URL Syntax',
+        description:
+          'Check URL syntax and separate entries the toolkit identifies as valid or invalid.',
+        linkPath: '/bulk-url-validator',
+      },
+      {
+        title: 'Open Unique Links in Batches',
+        description:
+          'Launch your deduplicated URL collection in controlled browser tab batches for efficient visual review.',
+        linkPath: '/bulk-url-opener',
+      },
+      {
+        title: 'Extract Unique Domains',
+        description:
+          'Summarize your deduplicated URL list into distinct root hostnames or web domains.',
+        linkPath: '/domain-extractor',
+      },
+    ],
     howToSteps: [
       {
         step: 1,
-        title: 'Paste your URL list',
-        description: 'Paste duplicate-heavy links from sitemaps, crawlers, or outreach lists.',
+        title: 'Paste or import your URL list',
+        description:
+          'Paste raw URLs into the editor (one URL per line) or import a text file.',
       },
       {
         step: 2,
         title: 'Choose matching sensitivity',
-        description: 'Choose between case-sensitive matching or case-insensitive matching.',
+        description:
+          'Keep case-insensitive matching enabled for standard web links, or toggle case-sensitive matching if path casing matters.',
       },
       {
         step: 3,
         title: 'Execute deduplication',
-        description: 'Click "Remove Duplicates". The tool removes repeated entries while keeping the first occurrence.',
+        description:
+          'Click "Remove Duplicates" to eliminate repeated lines client-side while preserving the first occurrence of each unique entry.',
       },
       {
         step: 4,
-        title: 'Verify removed count',
-        description: 'Review the removed count badge and download your unique list.',
+        title: 'Review counts and export',
+        description:
+          'Check the badge showing exact duplicate counts removed, then copy your unique list to the clipboard or download it as a text file.',
       },
     ],
     faqs: [
       {
         question: 'Does removing duplicates change the order of my URLs?',
         answer:
-          'No. Our deduplication algorithm preserves the exact order of appearance for the first occurrence of each unique URL.',
+          'No. The first occurrence of each URL is retained, subsequent matching occurrences are removed, and the original sequence of first appearance is preserved. The first occurrence also retains its original casing.',
       },
       {
-        question: 'How are case differences handled?',
+        question: 'How does case-sensitive and case-insensitive matching work?',
         answer:
-          'By default, URLs are compared case-insensitively so that example.com/page and EXAMPLE.COM/page are recognized as duplicates. You can switch to case-sensitive matching with one toggle.',
+          'By default, URLs are compared case-insensitively, meaning https://example.com/page and https://EXAMPLE.COM/page are recognized as duplicates. When case-insensitive mode matches duplicate entries, it does not lowercase the retained output; the original casing of the first occurrence is kept. You can also enable optional case-sensitive matching, where comparison applies to the entire trimmed string and different casing is treated as distinct.',
+      },
+      {
+        question: 'Does the tool ignore spaces around URLs when detecting duplicates?',
+        answer:
+          'Yes. Standard leading and trailing whitespace is trimmed from each line before comparison and output, and blank or whitespace-only lines are skipped automatically. However, zero-width characters (such as zero-width spaces or byte order marks) are not stripped by the Deduplicator; use Bulk URL Cleaner first if those formatting artifacts need to be removed.',
+      },
+      {
+        question: 'Are URLs with and without trailing slashes considered duplicates?',
+        answer:
+          'No. Because deduplication performs exact string comparison, https://example.com/page and https://example.com/page/ are treated as different entries. To align trailing slash formatting before deduplicating, use the Bulk URL Normalizer utility.',
+      },
+      {
+        question: 'Are HTTP and HTTPS versions of the same URL merged?',
+        answer:
+          'No. Because protocol schemes form part of the complete URL string, http://example.com and https://example.com remain different strings and will both be retained. Standardize protocol schemes with Bulk URL Normalizer before deduplicating if you want them to match.',
+      },
+      {
+        question: 'Are URLs with different query or tracking parameters considered duplicates?',
+        answer:
+          'No. Query string differences remain distinct. URLs with different query parameters, as well as URLs with different UTM marketing values (such as ?utm_source=google vs ?utm_source=newsletter), remain distinct entries because tracking parameters are not removed automatically. Remove supported tracking parameters with the UTM & Tracking Parameter Remover first if you want differences caused only by those tags to no longer affect comparison.',
+      },
+      {
+        question: 'Does Duplicate URL Remover validate URLs or check whether links work?',
+        answer:
+          'No. Deduplication operates strictly through client-side string matching. Any non-empty text lines can also be deduplicated without requiring valid web link syntax, and the tool performs no network calls, DNS lookups, or server reachability checks. Use Bulk URL Validator to check URL syntax and separate entries the toolkit identifies as valid or invalid.',
+      },
+      {
+        question: 'How many entries can I deduplicate at one time?',
+        answer:
+          'The interface supports lists of up to 5,000 entries, and deduplication runs locally in your browser. Your URL list is not uploaded to our servers for processing.',
       },
     ],
-    relatedToolIds: ['cleaner', 'utm', 'normalizer', 'home'],
+    relatedToolIds: ['cleaner', 'utm', 'normalizer', 'validator', 'opener'],
   },
   utm: {
     id: 'utm',
