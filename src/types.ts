@@ -57,6 +57,11 @@ export interface ToolPageConfig {
   metaTitle: string;
   metaDescription: string;
   summary: string;
+  aboutDetails?: string[];
+  useCases?: { title: string; description: string }[];
+  batchGuidance?: { title: string; description: string }[];
+  troubleshooting?: { title: string; description: string }[];
+  prepWorkflows?: { title: string; description: string; linkPath?: string }[];
   howToSteps: { step: number; title: string; description: string }[];
   faqs: { question: string; answer: string }[];
   defaultAction?: 'clean' | 'dedup' | 'utm' | 'normalize' | 'domain' | 'validate' | 'opener';

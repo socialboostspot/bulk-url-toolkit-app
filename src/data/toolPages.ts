@@ -77,49 +77,182 @@ export const TOOL_PAGES: Record<string, ToolPageConfig> = {
     name: 'Bulk URL Opener',
     shortTitle: 'URL Opener',
     h1: 'Bulk URL Opener – Open Multiple Links in Controlled Batches',
-    metaTitle: 'Bulk URL Opener – Open Multiple Links in Batches Safely',
+    metaTitle: 'Bulk URL Opener – Open Multiple Links in Controlled Batches',
     metaDescription:
-      'Open multiple URLs in new browser tabs with controlled batches of 10, 25, or 50 links. Prevent browser crashes and popup blocking with safe batching.',
+      'Open multiple URLs in new browser tabs in selectable batches of 10, 25, or 50 links. Client-side multi-tab opening with popup permission guidance.',
     summary:
-      'Open large lists of links in controlled batches to avoid overwhelming your browser or memory. Features customizable batch sizes and popup permission guidance.',
+      'Open lists of web addresses in selectable batches of 10, 25, or 50 links. Manage multi-tab opening directly in your browser with popup guidance and batch progress tracking.',
     defaultAction: 'opener',
+    aboutDetails: [
+      'A bulk URL opener launches multiple web addresses into separate browser tabs from a single list, removing the need to copy, paste, and open each link one at a time.',
+      'Attempting to launch dozens or hundreds of links simultaneously can quickly clutter your browser window, make individual tab titles difficult to distinguish, and disrupt your review workflow.',
+      'Bulk URL Toolkit helps you manage multi-tab opening by organizing your links into selectable batches of 10, 25, or 50 URLs. This allows you to inspect web pages in manageable groups at your own pace while tracking batch progress.',
+    ],
+    useCases: [
+      {
+        title: 'SEO Audits & Redirect Verification',
+        description:
+          'Open groups of URLs exported from crawl reports for manual review of redirect destinations, landing pages, or other pages that need visual inspection.',
+      },
+      {
+        title: 'Pre-Campaign Landing Page Reviews',
+        description:
+          'Verify promotional URLs, ad destinations, and marketing links before going live to confirm each page loads the expected destination.',
+      },
+      {
+        title: 'Spreadsheet & Analytics Export Checks',
+        description:
+          'Open groups of links extracted from spreadsheets, CSV files, or analytics dashboards for rapid visual spot-checks.',
+      },
+      {
+        title: 'QA & Multi-Page Template Testing',
+        description:
+          'Review staging links, updated page layouts, or new website templates across multiple URLs in structured batches.',
+      },
+      {
+        title: 'Research & Reference Lists',
+        description:
+          'Open batches of research citations, source articles, or competitor web pages during documentation and competitive reviews.',
+      },
+    ],
+    batchGuidance: [
+      {
+        title: '10 URLs per Batch (Focused Review)',
+        description:
+          'Best for detailed page inspection. Opening 10 tabs keeps tab titles readable in your browser tab bar and makes one-by-one verification easy to track.',
+      },
+      {
+        title: '25 URLs per Batch (Balanced Workflow)',
+        description:
+          'A practical middle ground for reviewing moderate-sized link lists efficiently while keeping the number of open browser tabs manageable.',
+      },
+      {
+        title: '50 URLs per Batch (High-Volume Skimming)',
+        description:
+          'Suited for faster scanning across large link collections. Opening 50 tabs produces a crowded tab bar and may take longer to load depending on your device and internet connection.',
+      },
+    ],
+    troubleshooting: [
+      {
+        title: 'Why Web Browsers Block Multi-Tab Opening',
+        description:
+          'Modern web browsers include built-in popup blocking protections to prevent unauthorized websites from spamming users with unwanted windows. When a web application attempts to launch multiple tabs from a single click action, the browser often allows only the first tab and blocks subsequent tabs by default.',
+      },
+      {
+        title: 'Granting Pop-up Permission for This Website',
+        description:
+          'To permit Bulk URL Opener to open your links, you need to allow pop-ups for this site. Check your browser address bar for a blocked pop-up icon or notification prompt, and select the option to always allow pop-ups and redirects from Bulk URL Toolkit.',
+      },
+      {
+        title: 'Retrying the Batch After Updating Permissions',
+        description:
+          'After updating the permission, retry the batch. If the browser accepts the site permission, the remaining links can open in new tabs.',
+      },
+    ],
+    prepWorkflows: [
+      {
+        title: 'Remove Duplicate Links First',
+        description:
+          'Eliminate repeated web addresses before opening your batch so you never launch identical pages multiple times.',
+        linkPath: '/duplicate-url-remover',
+      },
+      {
+        title: 'Validate Syntax & Formats',
+        description:
+          'Check URL syntax and separate entries that the toolkit identifies as valid or invalid before opening your list.',
+        linkPath: '/bulk-url-validator',
+      },
+      {
+        title: 'Strip Marketing & UTM Tags',
+        description:
+          'Remove supported marketing and tracking parameters, such as UTM tags and common advertising click IDs, before reviewing cleaner destination URLs.',
+        linkPath: '/utm-remover',
+      },
+      {
+        title: 'Clean Whitespace & Line Breaks',
+        description:
+          'Trim leading or trailing whitespace, remove blank lines, encode unescaped spaces, and repair accidental duplicate slashes.',
+        linkPath: '/url-cleaner',
+      },
+      {
+        title: 'Normalize URL Formatting',
+        description:
+          'Standardize supported URL formatting, including hostname casing and default port handling, for a more consistent URL list.',
+        linkPath: '/url-normalizer',
+      },
+      {
+        title: 'Extract Distinct Hostnames',
+        description:
+          'Convert a broad URL list into unique root domains or hostnames before deciding which web properties to open.',
+        linkPath: '/domain-extractor',
+      },
+    ],
     howToSteps: [
       {
         step: 1,
         title: 'Input links to open',
-        description: 'Paste your URL list into the textarea (one URL per line).',
+        description:
+          'Paste your URL list into the textarea (one URL per line) or import a text file.',
       },
       {
         step: 2,
-        title: 'Select batch size',
-        description: 'Choose 10, 25, or 50 URLs per batch according to your browser memory and workflow.',
+        title: 'Choose batch size',
+        description:
+          'Select 10, 25, or 50 URLs per batch according to your preferred workflow and tab management preferences.',
       },
       {
         step: 3,
-        title: 'Grant browser popup permission',
-        description: 'When prompted by your browser, choose "Always allow pop-ups and redirects" for this domain.',
+        title: 'Allow browser pop-ups',
+        description:
+          'When prompted by your browser, grant pop-up permission for this website to allow opening multiple tabs.',
       },
       {
         step: 4,
-        title: 'Launch tabs sequentially',
-        description: 'Click "Open Batch" to open the selected slice of tabs. Progress is tracked automatically.',
+        title: 'Launch tabs in batches',
+        description:
+          'Click "Open Batch" to launch the selected group of links, then advance through subsequent batches with progress tracking.',
       },
     ],
     faqs: [
       {
-        question: 'Why did my browser only open one tab instead of all of them?',
+        question: 'Why did only one tab open instead of all of them?',
         answer:
-          'Modern web browsers block automated multi-tab opening to protect users from malicious spam. Check your browser address bar for a small blocked popup icon, click it, and select "Always allow pop-ups from this site".',
+          'Modern web browsers include built-in popup blockers designed to prevent websites from opening unexpected windows. When you click "Open Batch", your browser may permit only the first tab and block the remaining links. Look for a blocked pop-up icon or notification prompt in your browser address bar, choose to allow pop-ups from this website, and then click "Open Batch" again.',
       },
       {
-        question: 'What batch size is recommended?',
+        question: 'What batch size should I choose?',
         answer:
-          'We recommend batches of 10 or 25 URLs. Opening more than 50 tabs simultaneously can cause high RAM utilization and browser lag on most consumer devices.',
+          'The Bulk URL Opener supports batch sizes of 10, 25, or 50 URLs. We recommend starting with 10 or 25 URLs per batch. Smaller batches keep tab titles readable in your browser window and make page-by-page review easier to manage, whereas 50 URLs per batch is suited for rapid skimming across larger link lists.',
+      },
+      {
+        question: 'Do I need a browser extension to open multiple URLs?',
+        answer:
+          'No. Bulk URL Opener runs directly in your web browser without requiring browser extensions, third-party add-ons, or desktop software installations. Once you allow pop-ups for this site, your browser will open tabs natively.',
+      },
+      {
+        question: 'Does Bulk URL Toolkit store the URLs I open?',
+        answer:
+          'No. All URL parsing, batch slicing, and tab-opening actions happen locally in your web browser. Your URL list is not uploaded to our servers or stored in any database. Standard web hosting requests for site assets are routed through Cloudflare infrastructure, but your entered link data remains client-side.',
+      },
+      {
+        question: 'Can I clean or remove duplicate URLs before opening them?',
+        answer:
+          'Yes. You can use the toolkit’s other utilities—such as Duplicate URL Remover, URL Cleaner, and UTM Remover—to refine your link list first. Once deduplicated and formatted, you can open the cleaned list in batches directly.',
+      },
+      {
+        question: 'What happens to invalid URLs or links missing a protocol?',
+        answer:
+          'If a URL does not start with an explicit http:// or https:// protocol prefix, the opener automatically prepends https:// to ensure your browser can navigate to it. However, malformed strings or broken text entries may fail to load in the browser; we recommend running Bulk URL Validator first to verify your links.',
+      },
+      {
+        question: 'Can I open thousands of URLs at once?',
+        answer:
+          'While you can paste large lists of URLs into the editor, the tool organizes links into controlled batches of up to 50 URLs per batch. Attempting to open thousands of tabs simultaneously would crowd your browser workspace and place heavy demands on your device, so batching allows you to review links incrementally.',
       },
       {
         question: 'Can I select specific URLs to open?',
         answer:
-          'Yes, you can filter by validity or search terms and open only the selected links.',
+          'Bulk URL Opener works from the URL list currently prepared in the editor. Remove any links you do not want to open before launching the Bulk Opener, or use the toolkit’s available processing tools to prepare the list first.',
       },
     ],
     relatedToolIds: ['cleaner', 'dedup', 'validator', 'home'],

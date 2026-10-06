@@ -3,10 +3,13 @@ import {
   HelpCircle,
   BookOpen,
   ArrowRight,
-  ExternalLink,
   ChevronRight,
   Shield,
   Zap,
+  Layers,
+  Sliders,
+  AlertTriangle,
+  Workflow,
 } from 'lucide-react';
 import { ToolPageConfig } from '../types';
 import { TOOL_PAGES } from '../data/toolPages';
@@ -63,13 +66,23 @@ export const ToolContentSection: React.FC<ToolContentSectionProps> = ({ config, 
 
       {/* Primary Explanatory & Features Section */}
       <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
-        <div className="max-w-3xl">
+        <div className="max-w-3xl space-y-4">
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             About {config.name}
           </h2>
-          <p className="mt-3 text-slate-600 leading-relaxed text-sm sm:text-base">
-            {config.summary}
-          </p>
+          {config.aboutDetails && config.aboutDetails.length > 0 ? (
+            <div className="space-y-3.5">
+              {config.aboutDetails.map((paragraph, idx) => (
+                <p key={idx} className="text-slate-600 leading-relaxed text-sm sm:text-base">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
+              {config.summary}
+            </p>
+          )}
 
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-100 text-xs text-slate-600">
             <div className="flex items-start gap-2.5">
@@ -95,30 +108,163 @@ export const ToolContentSection: React.FC<ToolContentSectionProps> = ({ config, 
         </div>
       </section>
 
-      {/* Step-by-Step How to Use Section */}
-      <section className="bg-slate-100/60 rounded-2xl border border-slate-200/80 p-6 sm:p-8">
-        <div className="flex items-center gap-2 mb-6">
-          <BookOpen className="w-5 h-5 text-blue-600" />
-          <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-            How to Use {config.name}
-          </h2>
-        </div>
+      {/* When the Tool Is Useful */}
+      {config.useCases && config.useCases.length > 0 && (
+        <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+          <div className="flex items-center gap-2 mb-6">
+            <Layers className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+              When a Bulk URL Opener Is Useful
+            </h2>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {config.howToSteps.map((item) => (
-            <div
-              key={item.step}
-              className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs space-y-2"
-            >
-              <div className="w-7 h-7 rounded-full bg-blue-50 text-blue-700 font-bold text-xs flex items-center justify-center border border-blue-200">
-                {item.step}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {config.useCases.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-slate-50/60 rounded-xl border border-slate-200/80 p-4 space-y-1.5"
+              >
+                <h3 className="font-semibold text-slate-900 text-sm">{item.title}</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">{item.description}</p>
               </div>
-              <h3 className="font-semibold text-slate-900 text-sm">{item.title}</h3>
-              <p className="text-xs text-slate-500 leading-relaxed">{item.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Choosing a Batch Size */}
+      {config.batchGuidance && config.batchGuidance.length > 0 && (
+        <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+          <div className="flex items-center gap-2 mb-6">
+            <Sliders className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+              Choosing a Batch Size
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {config.batchGuidance.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-slate-50/60 rounded-xl border border-slate-200/80 p-5 space-y-2"
+              >
+                <h3 className="font-semibold text-slate-900 text-sm">{item.title}</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Popup Blocker Troubleshooting */}
+      {config.troubleshooting && config.troubleshooting.length > 0 && (
+        <section className="bg-amber-50/40 rounded-2xl border border-amber-200/80 p-6 sm:p-8">
+          <div className="flex items-center gap-2 mb-6">
+            <AlertTriangle className="w-5 h-5 text-amber-600" />
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+              Popup Blocker Troubleshooting
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {config.troubleshooting.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-xl border border-amber-200/60 p-4 space-y-1.5 shadow-2xs"
+              >
+                <h3 className="font-semibold text-slate-900 text-sm">{item.title}</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Preparing Your URL List Before Opening */}
+      {config.prepWorkflows && config.prepWorkflows.length > 0 && (
+        <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+          <div className="flex items-center gap-2 mb-2">
+            <Workflow className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+              Preparing Your URL List Before Opening
+            </h2>
+          </div>
+          <p className="text-xs text-slate-500 mb-6">
+            Bulk URL Opener launches your links for manual review. If your raw list contains duplicates, formatting errors, or unwanted tracking parameters, you can refine your data first with our companion utilities:
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {config.prepWorkflows.map((item, idx) => {
+              const cardInner = (
+                <>
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-slate-900 text-sm group-hover:text-blue-600 transition-colors">
+                      {item.title}
+                    </h3>
+                    {item.linkPath && (
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all shrink-0 ml-1.5" />
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-600 leading-relaxed mt-1.5">
+                    {item.description}
+                  </p>
+                </>
+              );
+
+              return item.linkPath ? (
+                <a
+                  key={idx}
+                  href={item.linkPath}
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigate(item.linkPath!);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  className="group bg-slate-50/60 hover:bg-blue-50/40 border border-slate-200/80 hover:border-blue-300 rounded-xl p-4 transition-all block cursor-pointer"
+                >
+                  {cardInner}
+                </a>
+              ) : (
+                <div
+                  key={idx}
+                  className="bg-slate-50/60 border border-slate-200/80 rounded-xl p-4"
+                >
+                  {cardInner}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Step-by-Step How to Use Section */}
+      {config.howToSteps && config.howToSteps.length > 0 && (
+        <section className="bg-slate-100/60 rounded-2xl border border-slate-200/80 p-6 sm:p-8">
+          <div className="flex items-center gap-2 mb-6">
+            <BookOpen className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+              How to Use {config.name}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {config.howToSteps.map((item) => (
+              <div
+                key={item.step}
+                className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-2xs space-y-2"
+              >
+                <div className="w-7 h-7 rounded-full bg-blue-50 text-blue-700 font-bold text-xs flex items-center justify-center border border-blue-200">
+                  {item.step}
+                </div>
+                <h3 className="font-semibold text-slate-900 text-sm">{item.title}</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Relevant FAQ Section */}
       {config.faqs && config.faqs.length > 0 && (
