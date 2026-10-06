@@ -182,7 +182,11 @@ export const ToolContentSection: React.FC<ToolContentSectionProps> = ({ config, 
           <p className="text-xs text-slate-500 mb-6">
             {config.id === 'cleaner'
               ? 'To prevent breaking intentional URL configurations, Bulk URL Cleaner restricts transformations strictly to formatting and whitespace hygiene:'
-              : `To preserve intended destination integrity, ${config.name} eliminates duplicate entries without modifying individual URL syntax or query parameters:`}
+              : config.id === 'dedup'
+              ? `To preserve intended destination integrity, ${config.name} eliminates duplicate entries without modifying individual URL syntax or query parameters:`
+              : config.id === 'utm'
+              ? `${config.name} removes recognized marketing and tracking parameters while leaving other URL components unchanged:`
+              : `To preserve intended destination integrity, ${config.name} restricts transformations to its specified operation without modifying other URL components:`}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">

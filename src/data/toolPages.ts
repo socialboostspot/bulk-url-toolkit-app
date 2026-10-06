@@ -641,48 +641,179 @@ export const TOOL_PAGES: Record<string, ToolPageConfig> = {
     path: '/utm-remover',
     name: 'UTM & Tracking Parameter Remover',
     shortTitle: 'UTM Remover',
-    h1: 'UTM & Tracking Parameter Remover – Clean URLs Without Breaking Links',
-    metaTitle: 'UTM & Tracking Parameter Remover – Strip Marketing & Click IDs',
+    h1: 'UTM & Tracking Parameter Remover – Remove Marketing & Click IDs',
+    metaTitle: 'UTM & Tracking Parameter Remover – Remove Marketing & Click IDs',
     metaDescription:
-      'Strip utm_source, utm_campaign, gclid, fbclid, msclkid and other marketing tags from URLs in bulk. Safely keeps all real functional query parameters.',
+      'Remove UTM parameters, gclid, fbclid, msclkid, and marketing tracking tokens in bulk while retaining non-targeted query parameters and fragments.',
     summary:
-      'Sanitize marketing URLs by stripping UTM tags, Google Click IDs (gclid), Meta tags (fbclid), and ad tracking codes while safely preserving functional query parameters.',
+      'Remove supported UTM parameters, advertising click IDs, and marketing tracking tokens from URL lists while retaining non-targeted query parameters and fragments.',
     defaultAction: 'utm',
+    aboutDetails: [
+      'Tracking and marketing parameters commonly accumulate on web links shared across advertising campaigns, newsletters, social platforms, and marketing automation workflows. While valuable for attribution analytics, these lengthy query strings produce cluttered links, distort manual review, and interfere with spreadsheet operations.',
+      'UTM & Tracking Parameter Remover sanitizes URL lists by stripping supported marketing parameters—including all keys beginning with utm_ as well as common advertising click identifiers like gclid, fbclid, and msclkid—while strictly retaining non-targeted query parameters and URL fragments. Parameter-name matching is case-insensitive, and trailing question marks are automatically removed when no query parameters remain.',
+      'All tracking removal executes entirely client-side in your web browser using JavaScript in memory. Your URL list is processed directly on your device and is not uploaded to our servers, keeping your link data private.',
+    ],
+    examples: [
+      {
+        explanation: 'Removes standard UTM campaign tags while cleaning the trailing question mark',
+        input: 'https://example.com/page?utm_source=google&utm_medium=cpc',
+        output: 'https://example.com/page',
+      },
+      {
+        explanation: 'Preserves non-targeted query parameters and maintains their original relative order',
+        input: 'https://example.com/product?id=123&utm_source=email&page=2',
+        output: 'https://example.com/product?id=123&page=2',
+      },
+      {
+        explanation: 'Strips advertising click identifiers like Google Ads gclid and Meta fbclid',
+        input: 'https://example.com/page?gclid=123&fbclid=456',
+        output: 'https://example.com/page',
+      },
+      {
+        explanation: 'Removes tracking parameters while strictly preserving URL fragments',
+        input: 'https://example.com/page?utm_source=test#pricing',
+        output: 'https://example.com/page#pricing',
+      },
+    ],
+    boundaries: [
+      {
+        title: 'Does Not Deduplicate Results',
+        description:
+          'If two different tracked URLs become identical after parameter removal, both output lines remain in your list. Use Duplicate URL Remover afterward if you want to eliminate repeated destinations.',
+      },
+      {
+        title: 'Does Not Remove Unknown Parameters Automatically',
+        description:
+          'All query parameter keys beginning with utm_ are recognized automatically. Other keys are removed only when covered by the tool’s supported tracking rules (such as common ad click IDs and email tokens). Unknown or custom parameters, such as ref= or aff_id=, are not assumed to be tracking parameters and remain untouched.',
+      },
+      {
+        title: 'Does Not Normalize URL Structure',
+        description:
+          'The tool does not convert HTTP to HTTPS, add or remove trailing slashes, lowercase hostnames or paths, or collapse duplicate path slashes. Use Bulk URL Normalizer or Bulk URL Cleaner for structural normalization.',
+      },
+      {
+        title: 'Preserves Non-Targeted Query Data',
+        description:
+          'Retained query pairs keep their original values, casing, empty values, duplicate keys, and original relative order without re-encoding or reordering.',
+      },
+      {
+        title: 'Preserves Fragments',
+        description:
+          'Anchor fragment identifiers (#section) remain attached after query parameter cleanup, even when all query parameters are removed.',
+      },
+      {
+        title: 'Does Not Validate or Check Reachability',
+        description:
+          'The tool performs client-side string sanitization without URL syntax validation, DNS checks, HTTP requests, redirect resolution, canonical-tag inspection, or server reachability checks.',
+      },
+    ],
+    prepWorkflows: [
+      {
+        title: 'Remove Duplicate URLs',
+        description:
+          'Eliminate repeated links that become identical once tracking parameters are removed.',
+        linkPath: '/duplicate-url-remover',
+      },
+      {
+        title: 'Clean Whitespace & Line Breaks',
+        description:
+          'Trim padding spaces, eliminate empty rows, encode unescaped spaces, and collapse duplicate path slashes.',
+        linkPath: '/url-cleaner',
+      },
+      {
+        title: 'Normalize URL Structure',
+        description:
+          'Standardize schemes, lowercase hostnames, and align trailing slashes across your link collection.',
+        linkPath: '/url-normalizer',
+      },
+      {
+        title: 'Validate URL Syntax',
+        description:
+          'Check URL syntax and separate entries the toolkit identifies as valid or invalid.',
+        linkPath: '/bulk-url-validator',
+      },
+      {
+        title: 'Open Cleaned Links in Batches',
+        description:
+          'Launch your cleaned links in controlled browser tab batches for efficient visual inspection.',
+        linkPath: '/bulk-url-opener',
+      },
+      {
+        title: 'Extract Unique Domains',
+        description:
+          'Summarize your cleaned URLs into distinct root hostnames or web domains.',
+        linkPath: '/domain-extractor',
+      },
+    ],
     howToSteps: [
       {
         step: 1,
-        title: 'Paste marketing URLs',
-        description: 'Paste URLs containing campaign tags, newsletter parameters, or social tracking tokens.',
+        title: 'Paste or import URLs',
+        description:
+          'Paste URLs containing campaign tags or tracking parameters into the editor (one URL per line) or import a text file.',
       },
       {
         step: 2,
-        title: 'Select tracking filters',
-        description: 'Target standard UTM tags, ad click IDs (gclid, fbclid, msclkid), or custom marketing tokens.',
+        title: 'Select tracking categories',
+        description:
+          'Use the options tray to choose supported parameter groups: UTM parameters, ad click IDs, or email and CRM tracking tokens.',
       },
       {
         step: 3,
-        title: 'Remove parameters',
-        description: 'Click "Remove Tracking Parameters". The engine cleanly strips tags and removes trailing question marks if empty.',
+        title: 'Remove tracking parameters',
+        description:
+          'Click "Remove Tracking (UTMs)" to strip matching parameters client-side; an empty trailing ? is removed when no query parameters remain.',
       },
       {
         step: 4,
-        title: 'Copy pristine URLs',
-        description: 'Export or copy canonical, tracking-free links ready for sharing or indexing.',
+        title: 'Review results and export',
+        description:
+          'Review the modified lines badge, inspect the cleaned preview, and copy or download your sanitized URL list.',
       },
     ],
     faqs: [
       {
-        question: 'Which tracking parameters are removed?',
+        question: 'Which tracking parameters can the tool remove?',
         answer:
-          'The default rules strip utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_id, gclid, gbraid, wbraid, fbclid, msclkid, ttclid, twclid, yclid, mc_cid, mc_eid, and hsCtaTracking.',
+          'When UTM removal is enabled, the tool strips all query parameters beginning with utm_ (case-insensitively). Depending on selected tracking categories, it also removes supported ad click identifiers (such as gclid, gbraid, wbraid, dclid, fbclid, fbc, fbp, msclkid, twclid, ttclid, yclid) and email or marketing platform tokens (such as mc_cid, mc_eid, _hsenc, _hsmi, hsctatracking, igshid, vero_id, vero_conv, pk_campaign, pk_kwd, pk_source, pk_medium, pk_content). Unknown or custom parameters outside these supported sets remain untouched.',
       },
       {
-        question: 'Will this remove normal query parameters like product ID or search terms?',
+        question: 'Are non-tracking query parameters preserved?',
         answer:
-          'No! Functional query parameters (such as ?id=123, ?search=shoes, ?page=2) are completely preserved. Only known tracking and click identifier keys are stripped.',
+          'Yes. Query parameters that do not match the selected tracking rules remain intact. Their parameter values, casing, empty values (such as ?id=), duplicate keys, and original relative order are preserved.',
+      },
+      {
+        question: 'Does the tool remove custom tracking parameters?',
+        answer:
+          'The current interface does not provide an input field for arbitrary custom parameter names. Any parameter starting with utm_ is recognized automatically, but unknown non-UTM tracking keys outside the tool’s supported categories remain untouched to prevent accidentally stripping functional parameters.',
+      },
+      {
+        question: 'What happens when all query parameters are removed?',
+        answer:
+          'When every query parameter on a URL is stripped, the tool removes the trailing question mark (?), leaving a clean path.',
+      },
+      {
+        question: 'Are URL fragments preserved?',
+        answer:
+          'Yes. URL fragment identifiers (such as #pricing or #section2) are separated before query processing and reattached afterward, even when all query parameters are removed.',
+      },
+      {
+        question: 'Does tracking removal automatically remove duplicate URLs?',
+        answer:
+          'No. The tool processes lines individually without deduplication. If two different input URLs become identical once tracking parameters are removed, both lines will remain in your output. You can use Duplicate URL Remover afterward to eliminate repeated links.',
+      },
+      {
+        question: 'Does the tool validate URLs or check whether they work?',
+        answer:
+          'No. The tool performs client-side text sanitization without validating URL syntax or making network, DNS, or server reachability checks. Use Bulk URL Validator to check URL syntax and separate entries the toolkit identifies as valid or invalid.',
+      },
+      {
+        question: 'How many entries can I process, and is the URL list uploaded?',
+        answer:
+          'The interface supports lists of up to 5,000 entries, and tracking-parameter removal runs locally in your browser. Your URL list is not uploaded to our servers for processing.',
       },
     ],
-    relatedToolIds: ['normalizer', 'cleaner', 'dedup', 'home'],
+    relatedToolIds: ['cleaner', 'dedup', 'normalizer', 'validator', 'opener'],
   },
   extractor: {
     id: 'extractor',
