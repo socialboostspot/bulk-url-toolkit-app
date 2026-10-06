@@ -83,9 +83,21 @@ export default function App() {
     if (ogUrl) {
       ogUrl.setAttribute('content', pageUrl);
     }
+    // Ensure single canonical tag matching current route
+    const allCanonicals = document.querySelectorAll('link[rel="canonical"]');
+    if (allCanonicals.length > 1) {
+      allCanonicals.forEach((el, idx) => {
+        if (idx > 0) el.remove();
+      });
+    }
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) {
       canonical.setAttribute('href', pageUrl);
+    } else {
+      const newCanonical = document.createElement('link');
+      newCanonical.setAttribute('rel', 'canonical');
+      newCanonical.setAttribute('href', pageUrl);
+      document.head.appendChild(newCanonical);
     }
   }, [activePageConfig]);
 

@@ -159,12 +159,15 @@ export const ToolContentSection: React.FC<ToolContentSectionProps> = ({ config, 
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {relatedTools.map((tool) => (
-              <button
+              <a
                 key={tool.id}
-                type="button"
-                onClick={() => {
-                  onNavigate(tool.path);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                href={tool.path}
+                onClick={(e) => {
+                  if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                    e.preventDefault();
+                    onNavigate(tool.path);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
                 }}
                 className="text-left bg-white hover:bg-blue-50/40 border border-slate-200 hover:border-blue-300 rounded-xl p-4 shadow-2xs group transition-all cursor-pointer flex flex-col justify-between"
               >
@@ -177,7 +180,7 @@ export const ToolContentSection: React.FC<ToolContentSectionProps> = ({ config, 
                     {tool.metaDescription}
                   </p>
                 </div>
-              </button>
+              </a>
             ))}
           </div>
         </section>

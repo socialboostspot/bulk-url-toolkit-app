@@ -42,12 +42,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Col */}
           <div className="md:col-span-1">
-            <div className="flex items-center gap-2 text-slate-900 font-bold text-lg">
+            <a
+              href="/"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigate('/');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className="flex items-center gap-2 text-slate-900 font-bold text-lg cursor-pointer"
+            >
               <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white">
                 <Link2 className="w-4 h-4" />
               </div>
               <span>Bulk URL Toolkit</span>
-            </div>
+            </a>
             <p className="text-sm text-slate-500 mt-3 leading-relaxed">
               A free, privacy-first browser utility suite for SEO professionals, web developers, data
               analysts, and digital marketers handling high-volume URLs.
@@ -64,17 +74,21 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </h4>
             <div className="grid grid-cols-2 gap-y-2.5 gap-x-4">
               {Object.values(TOOL_PAGES).map((tool) => (
-                <button
+                <a
                   key={tool.id}
-                  onClick={() => {
-                    onNavigate(tool.path);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  href={tool.path}
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigate(tool.path);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
                   }}
-                  className="text-left text-sm text-slate-600 hover:text-blue-600 hover:underline flex items-center gap-1.5 group transition-colors"
+                  className="text-left text-sm text-slate-600 hover:text-blue-600 hover:underline flex items-center gap-1.5 group transition-colors cursor-pointer"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-blue-600" />
                   <span>{tool.name}</span>
-                </button>
+                </a>
               ))}
             </div>
           </div>
