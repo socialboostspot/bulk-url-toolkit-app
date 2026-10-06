@@ -73,23 +73,25 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               Specialized URL Utilities
             </h4>
             <div className="grid grid-cols-2 gap-y-2.5 gap-x-4">
-              {Object.values(TOOL_PAGES).map((tool) => (
-                <a
-                  key={tool.id}
-                  href={tool.path}
-                  onClick={(e) => {
-                    if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
-                      e.preventDefault();
-                      onNavigate(tool.path);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                  }}
-                  className="text-left text-sm text-slate-600 hover:text-blue-600 hover:underline flex items-center gap-1.5 group transition-colors cursor-pointer"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-blue-600" />
-                  <span>{tool.name}</span>
-                </a>
-              ))}
+              {Object.values(TOOL_PAGES)
+                .filter((tool) => tool.id !== 'privacy' && tool.id !== 'about' && tool.id !== 'contact' && tool.id !== 'terms')
+                .map((tool) => (
+                  <a
+                    key={tool.id}
+                    href={tool.path}
+                    onClick={(e) => {
+                      if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                        e.preventDefault();
+                        onNavigate(tool.path);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
+                    className="text-left text-sm text-slate-600 hover:text-blue-600 hover:underline flex items-center gap-1.5 group transition-colors cursor-pointer"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-blue-600" />
+                    <span>{tool.name}</span>
+                  </a>
+                ))}
             </div>
           </div>
 
@@ -119,6 +121,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                 <span>Free to use • No registration required</span>
               </li>
+              <li className="flex items-center gap-2 pt-1 border-t border-slate-100">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                <a
+                  href="/privacy"
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigate('/privacy');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  className="text-slate-600 hover:text-blue-600 hover:underline transition-colors cursor-pointer"
+                >
+                  View Full Privacy Policy
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -126,6 +144,62 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="border-t border-slate-200 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
           <p>© {new Date().getFullYear()} Bulk URL Toolkit. All processing runs locally in your web browser.</p>
           <div className="flex items-center gap-4">
+            <a
+              href="/about"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigate('/about');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className="text-slate-500 hover:text-blue-600 hover:underline transition-colors cursor-pointer font-medium"
+            >
+              About
+            </a>
+            <span>•</span>
+            <a
+              href="/privacy"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigate('/privacy');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className="text-slate-500 hover:text-blue-600 hover:underline transition-colors cursor-pointer font-medium"
+            >
+              Privacy Policy
+            </a>
+            <span>•</span>
+            <a
+              href="/terms"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigate('/terms');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className="text-slate-500 hover:text-blue-600 hover:underline transition-colors cursor-pointer font-medium"
+            >
+              Terms of Service
+            </a>
+            <span>•</span>
+            <a
+              href="/contact"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onNavigate('/contact');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className="text-slate-500 hover:text-blue-600 hover:underline transition-colors cursor-pointer font-medium"
+            >
+              Contact
+            </a>
+            <span>•</span>
             <span className="text-slate-400">Strictly No Tracking • Fast & Lightweight</span>
           </div>
         </div>

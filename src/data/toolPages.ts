@@ -412,6 +412,66 @@ export const TOOL_PAGES: Record<string, ToolPageConfig> = {
     ],
     relatedToolIds: ['cleaner', 'extractor', 'opener', 'home'],
   },
+  privacy: {
+    id: 'privacy',
+    path: '/privacy',
+    name: 'Privacy Policy',
+    shortTitle: 'Privacy',
+    h1: 'Privacy Policy – Bulk URL Toolkit',
+    metaTitle: 'Privacy Policy – Bulk URL Toolkit',
+    metaDescription:
+      'Learn how Bulk URL Toolkit handles your data. URL lists and uploaded files are processed locally in your browser with no server uploads, cookies, or tracking.',
+    summary:
+      'Our commitment to data privacy, client-side execution, and technical transparency regarding how Bulk URL Toolkit operates.',
+    howToSteps: [],
+    faqs: [],
+    relatedToolIds: [],
+  },
+  about: {
+    id: 'about',
+    path: '/about',
+    name: 'About',
+    shortTitle: 'About',
+    h1: 'About Bulk URL Toolkit',
+    metaTitle: 'About Bulk URL Toolkit – Free Client-Side Browser URL Processor',
+    metaDescription:
+      'Learn about Bulk URL Toolkit, a free client-side suite of URL utilities for SEO professionals, developers, and marketers. Privacy-first link processing in your browser.',
+    summary:
+      'Discover the purpose, utilities, and privacy-first client-side architecture powering Bulk URL Toolkit.',
+    howToSteps: [],
+    faqs: [],
+    relatedToolIds: [],
+  },
+  contact: {
+    id: 'contact',
+    path: '/contact',
+    name: 'Contact',
+    shortTitle: 'Contact',
+    h1: 'Contact & Feedback',
+    metaTitle: 'Contact & Feedback – Bulk URL Toolkit',
+    metaDescription:
+      'Contact and feedback details for Bulk URL Toolkit. Learn about project communications, bug reporting, and feature suggestion channels.',
+    summary:
+      'Information regarding inquiries, feedback channels, and support resources for Bulk URL Toolkit.',
+    howToSteps: [],
+    faqs: [],
+    relatedToolIds: [],
+  },
+  terms: {
+    id: 'terms',
+    path: '/terms',
+    name: 'Terms of Service',
+    shortTitle: 'Terms',
+    h1: 'Terms of Service',
+    metaTitle: 'Terms of Service – Bulk URL Toolkit',
+    metaDescription:
+      'Review the Terms of Service for Bulk URL Toolkit. Governing terms for free, client-side browser-based URL utilities and services.',
+    summary:
+      'The terms and conditions governing your access to and use of Bulk URL Toolkit and its browser-based link utilities.',
+    howToSteps: [],
+    faqs: [],
+    relatedToolIds: [],
+  },
 };
 
 export const ALL_TOOL_PATHS = Object.values(TOOL_PAGES).map((p) => p.path);

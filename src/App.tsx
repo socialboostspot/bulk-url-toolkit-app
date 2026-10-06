@@ -7,6 +7,10 @@ import { ActionToolbar } from './components/ActionToolbar';
 import { UrlResultsArea } from './components/UrlResultsArea';
 import { BulkOpenerModal } from './components/BulkOpenerModal';
 import { ToolContentSection } from './components/ToolContentSection';
+import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
+import { AboutPage } from './components/AboutPage';
+import { ContactPage } from './components/ContactPage';
+import { TermsPage } from './components/TermsPage';
 import { TOOL_PAGES } from './data/toolPages';
 import { SAMPLE_URLS_TEXT } from './data/sampleUrls';
 import {
@@ -271,111 +275,123 @@ export default function App() {
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        {/* Page Hero Header with strict user intent H1 and Privacy Statement */}
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              {activePageConfig.h1}
-            </h1>
+        {currentPath === '/privacy' ? (
+          <PrivacyPolicyPage onNavigate={navigateTo} />
+        ) : currentPath === '/about' ? (
+          <AboutPage onNavigate={navigateTo} />
+        ) : currentPath === '/contact' ? (
+          <ContactPage onNavigate={navigateTo} />
+        ) : currentPath === '/terms' ? (
+          <TermsPage onNavigate={navigateTo} />
+        ) : (
+          <>
+            {/* Page Hero Header with strict user intent H1 and Privacy Statement */}
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  {activePageConfig.h1}
+                </h1>
 
-            {/* Privacy Statement */}
-            <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-3 py-1.5 rounded-full font-medium shadow-2xs">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>URL processing happens locally in your browser. Your URL list is not uploaded to our servers for processing.</span>
+                {/* Privacy Statement */}
+                <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-3 py-1.5 rounded-full font-medium shadow-2xs">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>URL processing happens locally in your browser. Your URL list is not uploaded to our servers for processing.</span>
+                </div>
+              </div>
+
+              <p className="text-sm sm:text-base text-slate-600 max-w-4xl leading-relaxed">
+                {activePageConfig.summary}
+              </p>
             </div>
-          </div>
 
-          <p className="text-sm sm:text-base text-slate-600 max-w-4xl leading-relaxed">
-            {activePageConfig.summary}
-          </p>
-        </div>
-
-        {/* Real-time Statistics Bar */}
-        <UrlStatsBar
-          analysis={analysis}
-          originalCount={originalNonEmptyCount}
-          processedCount={processedUrls.length > 0 ? processedNonEmptyCount : originalNonEmptyCount}
-          activeFilter={activeFilter}
-          onFilterChange={(filter) => {
-            setActiveFilter(filter);
-            if (filter === 'invalid') {
-              setActiveViewTab('invalid');
-            } else if (filter === 'all') {
-              setActiveViewTab('all');
-            }
-          }}
-          lastActionName={lastActionName}
-        />
-
-        {/* Action Toolbar */}
-        <ActionToolbar
-          onClean={handleClean}
-          onRemoveDuplicates={handleRemoveDuplicates}
-          onRemoveTracking={handleRemoveTracking}
-          onNormalize={handleNormalize}
-          onExtractDomains={handleExtractDomains}
-          onFindInvalid={handleFindInvalid}
-          onSort={handleSort}
-          onUndo={handleUndo}
-          onReset={handleReset}
-          canUndo={history.length > 0}
-          urlsCount={originalNonEmptyCount}
-          invalidCount={analysis.invalid}
-          duplicateCount={analysis.duplicates}
-        />
-
-        {/* Two-Column Editor Workspace: Original Input on Left, Results Preview on Right */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-          {/* Left Column: Original Input Textarea */}
-          <div className="flex flex-col h-full space-y-2">
-            <UrlInputArea
-              value={inputText}
-              onChange={(val) => {
-                setInputText(val);
-                if (hasProcessed) {
-                  // If user edits original input, reset processed preview to keep state honest
-                  setProcessedUrls([]);
-                  setHasProcessed(false);
-                  setLastActionName('');
+            {/* Real-time Statistics Bar */}
+            <UrlStatsBar
+              analysis={analysis}
+              originalCount={originalNonEmptyCount}
+              processedCount={processedUrls.length > 0 ? processedNonEmptyCount : originalNonEmptyCount}
+              activeFilter={activeFilter}
+              onFilterChange={(filter) => {
+                setActiveFilter(filter);
+                if (filter === 'invalid') {
+                  setActiveViewTab('invalid');
+                } else if (filter === 'all') {
+                  setActiveViewTab('all');
                 }
               }}
-              onClear={handleClearAll}
-              onLoadSample={handleLoadSample}
-            />
-          </div>
-
-          {/* Right Column: Processed Results Preview */}
-          <div className="flex flex-col h-full space-y-2">
-            <UrlResultsArea
-              processedUrls={processedUrlsToDisplay}
-              invalidUrls={validation.invalid}
-              activeViewTab={activeViewTab}
-              onViewTabChange={setActiveViewTab}
-              onOpenBulkModal={() => setIsBulkOpenerOpen(true)}
+              lastActionName={lastActionName}
             />
 
-            {/* Quick helper banner when output differs from input */}
-            {hasProcessed && (
-              <div className="flex items-center justify-between text-xs px-3 py-2 bg-blue-50/80 border border-blue-200 rounded-lg text-blue-900">
-                <span>
-                  Showing processed output ({processedNonEmptyCount} URLs). Original input remains untouched.
-                </span>
-                <button
-                  type="button"
-                  onClick={handleApplyToInput}
-                  className="font-semibold text-blue-700 hover:text-blue-900 hover:underline flex items-center gap-1 cursor-pointer shrink-0"
-                  title="Replace original input with this processed result"
-                >
-                  <ArrowRightLeft className="w-3 h-3" />
-                  <span>Set as Original Input</span>
-                </button>
+            {/* Action Toolbar */}
+            <ActionToolbar
+              onClean={handleClean}
+              onRemoveDuplicates={handleRemoveDuplicates}
+              onRemoveTracking={handleRemoveTracking}
+              onNormalize={handleNormalize}
+              onExtractDomains={handleExtractDomains}
+              onFindInvalid={handleFindInvalid}
+              onSort={handleSort}
+              onUndo={handleUndo}
+              onReset={handleReset}
+              canUndo={history.length > 0}
+              urlsCount={originalNonEmptyCount}
+              invalidCount={analysis.invalid}
+              duplicateCount={analysis.duplicates}
+            />
+
+            {/* Two-Column Editor Workspace: Original Input on Left, Results Preview on Right */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+              {/* Left Column: Original Input Textarea */}
+              <div className="flex flex-col h-full space-y-2">
+                <UrlInputArea
+                  value={inputText}
+                  onChange={(val) => {
+                    setInputText(val);
+                    if (hasProcessed) {
+                      // If user edits original input, reset processed preview to keep state honest
+                      setProcessedUrls([]);
+                      setHasProcessed(false);
+                      setLastActionName('');
+                    }
+                  }}
+                  onClear={handleClearAll}
+                  onLoadSample={handleLoadSample}
+                />
               </div>
-            )}
-          </div>
-        </div>
 
-        {/* Focused Tool Guide / How-To / FAQ / Structured Data section */}
-        <ToolContentSection config={activePageConfig} onNavigate={navigateTo} />
+              {/* Right Column: Processed Results Preview */}
+              <div className="flex flex-col h-full space-y-2">
+                <UrlResultsArea
+                  processedUrls={processedUrlsToDisplay}
+                  invalidUrls={validation.invalid}
+                  activeViewTab={activeViewTab}
+                  onViewTabChange={setActiveViewTab}
+                  onOpenBulkModal={() => setIsBulkOpenerOpen(true)}
+                />
+
+                {/* Quick helper banner when output differs from input */}
+                {hasProcessed && (
+                  <div className="flex items-center justify-between text-xs px-3 py-2 bg-blue-50/80 border border-blue-200 rounded-lg text-blue-900">
+                    <span>
+                      Showing processed output ({processedNonEmptyCount} URLs). Original input remains untouched.
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleApplyToInput}
+                      className="font-semibold text-blue-700 hover:text-blue-900 hover:underline flex items-center gap-1 cursor-pointer shrink-0"
+                      title="Replace original input with this processed result"
+                    >
+                      <ArrowRightLeft className="w-3 h-3" />
+                      <span>Set as Original Input</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Focused Tool Guide / How-To / FAQ / Structured Data section */}
+            <ToolContentSection config={activePageConfig} onNavigate={navigateTo} />
+          </>
+        )}
       </main>
 
       {/* Footer */}
