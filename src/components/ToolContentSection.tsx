@@ -10,6 +10,9 @@ import {
   Sliders,
   AlertTriangle,
   Workflow,
+  CheckCircle2,
+  Sparkles,
+  Info,
 } from 'lucide-react';
 import { ToolPageConfig } from '../types';
 import { TOOL_PAGES } from '../data/toolPages';
@@ -108,13 +111,97 @@ export const ToolContentSection: React.FC<ToolContentSectionProps> = ({ config, 
         </div>
       </section>
 
+      {/* Formatting Issues the Cleaner Fixes */}
+      {config.cleaningRules && config.cleaningRules.length > 0 && (
+        <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+          <div className="flex items-center gap-2 mb-6">
+            <CheckCircle2 className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+              Formatting Issues the Cleaner Fixes
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {config.cleaningRules.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-slate-50/60 rounded-xl border border-slate-200/80 p-4 space-y-1.5"
+              >
+                <h3 className="font-semibold text-slate-900 text-sm">{item.title}</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Verified Before & After Cleaning Examples */}
+      {config.examples && config.examples.length > 0 && (
+        <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+          <div className="flex items-center gap-2 mb-6">
+            <Sparkles className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+              Verified Before & After Examples
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {config.examples.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-slate-50/70 rounded-xl border border-slate-200/90 p-4 space-y-2 text-xs"
+              >
+                <div className="font-semibold text-slate-800 text-xs sm:text-sm">{item.explanation}</div>
+                <div className="space-y-1.5 font-mono">
+                  <div className="bg-red-50/70 border border-red-200/70 text-red-900 p-2 rounded break-all">
+                    <span className="font-sans font-semibold text-red-700 block text-[10px] uppercase tracking-wider mb-0.5">Raw Input:</span>
+                    {item.input}
+                  </div>
+                  <div className="bg-emerald-50/70 border border-emerald-200/70 text-emerald-900 p-2 rounded break-all">
+                    <span className="font-sans font-semibold text-emerald-700 block text-[10px] uppercase tracking-wider mb-0.5">Cleaned Output:</span>
+                    {item.output}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* What the Cleaner Does Not Change */}
+      {config.boundaries && config.boundaries.length > 0 && (
+        <section className="bg-slate-50/70 rounded-2xl border border-slate-200 p-6 sm:p-8">
+          <div className="flex items-center gap-2 mb-3">
+            <Info className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+              What the Cleaner Does Not Change
+            </h2>
+          </div>
+          <p className="text-xs text-slate-500 mb-6">
+            To prevent breaking intentional URL configurations, Bulk URL Cleaner restricts transformations strictly to formatting and whitespace hygiene:
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {config.boundaries.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-xl border border-slate-200/80 p-4 space-y-1.5 shadow-2xs"
+              >
+                <h3 className="font-semibold text-slate-900 text-sm">{item.title}</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* When the Tool Is Useful */}
       {config.useCases && config.useCases.length > 0 && (
         <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
           <div className="flex items-center gap-2 mb-6">
             <Layers className="w-5 h-5 text-blue-600" />
             <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-              When a Bulk URL Opener Is Useful
+              {config.id === 'opener' ? 'When a Bulk URL Opener Is Useful' : `When ${config.name} Is Useful`}
             </h2>
           </div>
 
@@ -180,17 +267,19 @@ export const ToolContentSection: React.FC<ToolContentSectionProps> = ({ config, 
         </section>
       )}
 
-      {/* Preparing Your URL List Before Opening */}
+      {/* Preparing Your URL List Before Opening / Companion Utilities */}
       {config.prepWorkflows && config.prepWorkflows.length > 0 && (
         <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
           <div className="flex items-center gap-2 mb-2">
             <Workflow className="w-5 h-5 text-blue-600" />
             <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-              Preparing Your URL List Before Opening
+              {config.id === 'opener' ? 'Preparing Your URL List Before Opening' : 'Companion URL Processing Utilities'}
             </h2>
           </div>
           <p className="text-xs text-slate-500 mb-6">
-            Bulk URL Opener launches your links for manual review. If your raw list contains duplicates, formatting errors, or unwanted tracking parameters, you can refine your data first with our companion utilities:
+            {config.id === 'opener'
+              ? 'Bulk URL Opener launches your links for manual review. If your raw list contains duplicates, formatting errors, or unwanted tracking parameters, you can refine your data first with our companion utilities:'
+              : 'Different URL utilities handle specific tasks. Use these companion tools alongside Bulk URL Cleaner for a complete link hygiene workflow:'}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">

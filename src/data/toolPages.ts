@@ -262,45 +262,196 @@ export const TOOL_PAGES: Record<string, ToolPageConfig> = {
     path: '/url-cleaner',
     name: 'Bulk URL Cleaner',
     shortTitle: 'URL Cleaner',
-    h1: 'Bulk URL Cleaner – Clean Formatting, Whitespace & Corrupted Paths',
-    metaTitle: 'Bulk URL Cleaner – Fix Spacing, Blank Lines & Formatting Errors',
+    h1: 'Bulk URL Cleaner – Fix Whitespace, Blank Lines & URL Formatting',
+    metaTitle: 'Bulk URL Cleaner – Fix Whitespace, Blank Lines & Formatting',
     metaDescription:
-      'Clean messy lists of URLs. Remove blank lines, trim leading/trailing whitespace, fix unescaped spaces, and repair accidental duplicate slashes client-side.',
+      'Clean messy lists of URLs client-side. Trim leading and trailing whitespace, remove blank lines, encode unescaped spaces, and repair duplicate path slashes.',
     summary:
-      'Standardize messy link lists by eliminating stray whitespace, removing empty rows, encoding unescaped spaces, and stripping accidental trailing punctuation.',
+      'Clean messy link lists in your browser. Trim leading and trailing whitespace, remove blank lines, encode unescaped spaces into %20, repair duplicate path slashes, and strip accidental trailing punctuation.',
     defaultAction: 'clean',
+    aboutDetails: [
+      'When collecting web addresses from spreadsheets, CSV exports, rich text documents, emails, or scrape logs, link lists frequently pick up formatting artifacts that cause navigation errors or spreadsheet formula failures.',
+      'Bulk URL Cleaner quickly standardizes raw URL lists by stripping accidental whitespace, removing empty rows, encoding literal spaces into valid %20 tokens, collapsing duplicate slashes in URL paths, and removing stray copied punctuation like trailing commas and periods.',
+      'All cleaning operations execute entirely client-side within your browser using JavaScript. Your URL lists are processed directly in volatile memory and are not uploaded to our servers, keeping your data private.',
+    ],
+    cleaningRules: [
+      {
+        title: 'Leading & Trailing Whitespace',
+        description:
+          'Strips standard spaces, tabs, and hidden zero-width Unicode characters (such as zero-width spaces and byte order marks) from the beginning and end of each URL.',
+      },
+      {
+        title: 'Empty & Blank Lines',
+        description:
+          'Eliminates empty rows and lines containing only whitespace, leaving the remaining non-empty entries together in the cleaned list.',
+      },
+      {
+        title: 'Unescaped Spaces Encoded as %20',
+        description:
+          'Detects literal spaces within URL paths or query strings and converts them into standard percent-encoded %20 notation without altering the overall URL structure.',
+      },
+      {
+        title: 'Duplicate Path Slashes',
+        description:
+          'Repairs consecutive slashes in URL paths (such as //products///item) by collapsing them into single slashes, while strictly preserving the :// protocol separator.',
+      },
+      {
+        title: 'Accidental Trailing Punctuation',
+        description:
+          'Strips trailing commas, semicolons, and sentence-ending periods commonly introduced when copying links from body text, while protecting valid domain extensions.',
+      },
+    ],
+    examples: [
+      {
+        explanation: 'Trims leading and trailing spaces and zero-width characters',
+        input: '   https://example.com/about   ',
+        output: 'https://example.com/about',
+      },
+      {
+        explanation: 'Encodes literal spaces into standard %20 format',
+        input: 'https://example.com/my product page',
+        output: 'https://example.com/my%20product%20page',
+      },
+      {
+        explanation: 'Collapses multiple consecutive path slashes while preserving ://',
+        input: 'https://example.com//products///item',
+        output: 'https://example.com/products/item',
+      },
+      {
+        explanation: 'Strips copied trailing punctuation without altering valid domain extensions',
+        input: 'https://example.com/article.,',
+        output: 'https://example.com/article',
+      },
+    ],
+    boundaries: [
+      {
+        title: 'Does Not Alter Protocols (HTTP to HTTPS)',
+        description:
+          'The cleaner preserves existing protocols without changing http:// to https:// or prepending missing schemes.',
+      },
+      {
+        title: 'Does Not Modify Query Parameters or Fragments',
+        description:
+          'All query parameters (?key=value) and fragment identifiers (#hash) remain intact, encoding only literal spaces if present.',
+      },
+      {
+        title: 'Does Not Add or Remove Trailing Slashes',
+        description:
+          'The cleaner leaves path trailing slashes as provided (for example, /page/ stays /page/). Trailing slash formatting is managed by the Normalizer.',
+      },
+      {
+        title: 'Does Not Lowercase Hostnames or Paths',
+        description:
+          'Letter casing is preserved untouched across all schemes, domain names, query keys, and path segments.',
+      },
+      {
+        title: 'Does Not Deduplicate URLs',
+        description:
+          'Duplicate lines are kept in their original positions. Use the Duplicate URL Remover utility to eliminate repeated links.',
+      },
+      {
+        title: 'Does Not Strip UTM or Tracking Tags',
+        description:
+          'Marketing tokens such as utm_source, gclid, and fbclid are left in place. Use the UTM & Tracking Parameter Remover to strip tracking tokens.',
+      },
+      {
+        title: 'Does Not Check DNS or Server Reachability',
+        description:
+          'The cleaner does not ping web servers or verify domain registration. Use Bulk URL Validator to verify syntax validity.',
+      },
+    ],
+    prepWorkflows: [
+      {
+        title: 'Remove Duplicate URLs',
+        description:
+          'Eliminate repeated web addresses from large collections to ensure each destination appears only once.',
+        linkPath: '/duplicate-url-remover',
+      },
+      {
+        title: 'Strip Marketing & UTM Tags',
+        description:
+          'Remove analytics parameters and advertising click identifiers to obtain clean destination links.',
+        linkPath: '/utm-remover',
+      },
+      {
+        title: 'Normalize URL Structure',
+        description:
+          'Standardize hostname casing, remove default port numbers, and manage trailing slash consistency.',
+        linkPath: '/url-normalizer',
+      },
+      {
+        title: 'Validate URL Syntax',
+        description:
+          'Verify URL syntax compliance and separate valid web links from malformed or incomplete entries.',
+        linkPath: '/bulk-url-validator',
+      },
+    ],
     howToSteps: [
       {
         step: 1,
-        title: 'Paste raw URLs',
-        description: 'Paste your unformatted links copied from documents, spreadsheets, or text files.',
+        title: 'Paste or import URLs',
+        description:
+          'Paste your raw links into the editor (one URL per line) or import a text file.',
       },
       {
         step: 2,
-        title: 'Apply cleaning rules',
-        description: 'Click "Clean URLs" to automatically strip zero-width characters, trim whitespace, and fix unescaped characters.',
+        title: 'Configure and clean',
+        description:
+          'Click "Clean URLs" to trim whitespace, remove blank rows, encode unescaped spaces, and fix duplicate path slashes.',
       },
       {
         step: 3,
-        title: 'Inspect cleaned output',
-        description: 'See the exact count of removed empty rows and corrected syntax.',
+        title: 'Review cleaned results',
+        description:
+          'Inspect the updated preview on the right, displaying non-empty line counts and real-time list statistics.',
       },
       {
         step: 4,
-        title: 'Export ready URLs',
-        description: 'Copy the sanitized list directly or download it as a clean text file.',
+        title: 'Copy or export clean list',
+        description:
+          'Copy the cleaned URL list directly to your clipboard or download it as a sanitized text file.',
       },
     ],
     faqs: [
       {
         question: 'What formatting issues does the URL cleaner fix?',
         answer:
-          'It removes leading and trailing spaces, eliminates blank rows, encodes unescaped spaces into %20, fixes accidental double slashes in paths (without touching the protocol), and removes trailing punctuation like commas or periods from copied text.',
+          'The URL cleaner removes leading and trailing spaces, strips zero-width Unicode characters, eliminates empty lines, encodes unescaped spaces into %20, collapses duplicate path slashes (while preserving ://), and removes accidental trailing punctuation like commas, semicolons, and sentence periods.',
+      },
+      {
+        question: 'Are spaces inside URLs deleted or encoded?',
+        answer:
+          'Spaces are encoded into valid percent-encoded %20 format rather than deleted or replaced with hyphens. This ensures the resulting link conforms to URL syntax without altering intended path or query word boundaries.',
       },
       {
         question: 'Will cleaning alter the query parameters of my links?',
         answer:
-          'No. The cleaner maintains parameter integrity while encoding only illegal unescaped whitespace characters.',
+          'No. The cleaner maintains full parameter integrity. It does not delete, reorder, or filter query parameters, encoding only literal whitespace characters if present inside a query string.',
+      },
+      {
+        question: 'Does the URL Cleaner remove duplicate URLs?',
+        answer:
+          'No. The cleaner focuses purely on formatting and syntax hygiene, keeping all lines in their original order. To eliminate identical URLs, use the Duplicate URL Remover utility.',
+      },
+      {
+        question: 'Does the cleaner strip UTM and tracking parameters?',
+        answer:
+          'No. The cleaner leaves marketing tokens like utm_source, utm_campaign, and gclid intact. If you want to clean tracking tokens from your URLs, use our dedicated UTM & Tracking Parameter Remover.',
+      },
+      {
+        question: 'Does the cleaner check whether URLs are valid or reachable online?',
+        answer:
+          'No. The cleaner repairs formatting artifacts client-side but does not perform network pings or validate domain registration. Use Bulk URL Validator to check syntax validity across your list.',
+      },
+      {
+        question: 'Does the cleaner change HTTP to HTTPS?',
+        answer:
+          'No. The cleaner preserves your existing protocols without changing http:// to https:// or adding missing schemes. If you want protocol standardization, use the Bulk URL Normalizer.',
+      },
+      {
+        question: 'Can I clean large lists of URLs at once?',
+        answer:
+          'Yes. The interface supports lists of up to 5,000 URLs, and cleaning runs locally in your browser. Your URL list is not uploaded to our servers for processing.',
       },
     ],
     relatedToolIds: ['dedup', 'normalizer', 'validator', 'home'],

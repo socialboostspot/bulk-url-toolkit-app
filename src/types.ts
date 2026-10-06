@@ -62,6 +62,9 @@ export interface ToolPageConfig {
   batchGuidance?: { title: string; description: string }[];
   troubleshooting?: { title: string; description: string }[];
   prepWorkflows?: { title: string; description: string; linkPath?: string }[];
+  cleaningRules?: { title: string; description: string }[];
+  examples?: { input: string; output: string; explanation: string }[];
+  boundaries?: { title: string; description: string }[];
   howToSteps: { step: number; title: string; description: string }[];
   faqs: { question: string; answer: string }[];
   defaultAction?: 'clean' | 'dedup' | 'utm' | 'normalize' | 'domain' | 'validate' | 'opener';
