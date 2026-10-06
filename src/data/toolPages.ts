@@ -820,48 +820,179 @@ export const TOOL_PAGES: Record<string, ToolPageConfig> = {
     path: '/domain-extractor',
     name: 'Domain & Hostname Extractor',
     shortTitle: 'Domain Extractor',
-    h1: 'Domain & Hostname Extractor – Extract Unique Domains from URLs',
-    metaTitle: 'Domain & Hostname Extractor – Extract Unique Hosts in Bulk',
+    h1: 'Domain & Hostname Extractor – Extract Unique Hosts from URLs',
+    metaTitle: 'Domain & Hostname Extractor – Extract Hosts in Bulk',
     metaDescription:
-      'Convert a list of URLs into clean, unique hostnames or root domains. Strip www prefixes, group subdomains, and export unique domain lists in seconds.',
+      'Extract hostnames or optional root domains from absolute HTTP and HTTPS URLs in bulk. Strip www prefixes, preserve subdomains, and deduplicate lists client-side.',
     summary:
-      'Convert extensive lists of web addresses into a clean, deduplicated inventory of domains and hostnames. Ideal for SEO audits, backlink analysis, and security reviews.',
+      'Extract hostnames or optional root domains from absolute HTTP and HTTPS URLs. Strip www prefixes, preserve or condense subdomains, and deduplicate extracted results directly in your browser.',
     defaultAction: 'domain',
+    aboutDetails: [
+      'When conducting manual SEO reviews, backlink audits, crawl data inspections, or web analytics cleanups, raw URL lists often span thousands of deep internal links. Domain & Hostname Extractor converts lengthy URL paths into clean, distinct host inventories, allowing you to isolate and review unique web properties without manually editing spreadsheets.',
+      'By default, the tool extracts full hostnames from valid absolute HTTP and HTTPS URLs, automatically converts hostnames to lowercase, strips the www. prefix, removes duplicate hostnames, and discards ports, paths, query strings, and fragments. Subdomains (such as blog.example.com) remain separate and distinct by default. You can adjust these rules in the extraction options tray to retain the www. prefix, extract root domains, or keep repeated entries.',
+      'All domain extraction runs entirely client-side in your web browser using JavaScript in memory. The tool does not perform DNS lookups, WHOIS queries, or HTTP network requests, and your URL list is not uploaded to our servers for processing.',
+    ],
+    examples: [
+      {
+        explanation: 'Extracts the hostname while discarding the path, query string, and fragment identifier',
+        input: 'https://example.com/path?query=1#section',
+        output: 'example.com',
+      },
+      {
+        explanation: 'Strips the leading www. prefix by default to align with the base domain',
+        input: 'https://www.example.com/page',
+        output: 'example.com',
+      },
+      {
+        explanation: 'Preserves distinct subdomains by default unless Root Domain Only mode is enabled',
+        input: 'https://blog.example.com/article',
+        output: 'blog.example.com',
+      },
+      {
+        explanation: 'Extracts the hostname while discarding the port number and path',
+        input: 'http://example.com:8080/path',
+        output: 'example.com',
+      },
+    ],
+    boundaries: [
+      {
+        title: 'Requires Absolute HTTP or HTTPS URLs',
+        description:
+          'The extractor requires absolute web addresses starting with http:// or https://. Scheme-less entries (such as example.com/page), relative paths (/about), and non-HTTP schemes (such as ftp://) are invalid and omitted from output.',
+      },
+      {
+        title: 'Preserves Subdomains by Default',
+        description:
+          'Subdomains remain distinct entries by default (e.g., blog.example.com and shop.example.com remain separate). You must explicitly enable Root Domain Only in options to condense supported subdomains.',
+      },
+      {
+        title: 'Root Domain Mode Uses a Limited Heuristic',
+        description:
+          'When Root Domain Only is enabled, the tool does not use a complete Public Suffix List. It recognizes a limited set of common multi-part suffixes (co.uk, gov.uk, com.au, net.au, co.jp, com.br, and co.nz), condensing other multi-segment hostnames by taking the last two segments.',
+      },
+      {
+        title: 'Discards Non-Hostname URL Components',
+        description:
+          'Port numbers (:8080), URL paths (/folder/page), query parameters (?key=val), and fragment anchors (#section) are not included in extracted output.',
+      },
+      {
+        title: 'Does Not Perform DNS or WHOIS Checks',
+        description:
+          'The tool operates strictly on text parsing. It does not perform DNS resolution, WHOIS registration queries, ownership lookups, or website availability checks.',
+      },
+      {
+        title: 'Does Not Check Web Destinations',
+        description:
+          'No HTTP network requests, server status checks, redirect tracking, or canonical-tag inspections are performed.',
+      },
+    ],
+    prepWorkflows: [
+      {
+        title: 'Normalize URL Structure',
+        description:
+          'Standardize hostname casing, strip default ports, and align trailing slashes across valid web addresses before extracting hostnames.',
+        linkPath: '/url-normalizer',
+      },
+      {
+        title: 'Validate URL Syntax',
+        description:
+          'Check URL syntax and separate entries the toolkit identifies as valid or invalid.',
+        linkPath: '/bulk-url-validator',
+      },
+      {
+        title: 'Clean Whitespace & Line Breaks',
+        description:
+          'Trim leading/trailing whitespace, remove blank lines, and fix path formatting artifacts before extracting hostnames.',
+        linkPath: '/url-cleaner',
+      },
+      {
+        title: 'Remove Duplicate URLs',
+        description:
+          'Deduplicate complete URL lines before processing if you want to inspect a unique URL list first.',
+        linkPath: '/duplicate-url-remover',
+      },
+      {
+        title: 'Open Web Addresses in Batches',
+        description:
+          'Launch batches of complete URLs in controlled browser tabs for manual verification.',
+        linkPath: '/bulk-url-opener',
+      },
+      {
+        title: 'Strip Marketing & UTM Tags',
+        description:
+          'Remove tracking tokens from URLs before other workflows; extraction itself discards query strings automatically.',
+        linkPath: '/utm-remover',
+      },
+    ],
     howToSteps: [
       {
         step: 1,
-        title: 'Paste URL list',
-        description: 'Paste your list of URLs or crawl results into the input box.',
+        title: 'Paste or import absolute URLs',
+        description:
+          'Paste web addresses starting with http:// or https:// into the editor (one URL per line) or import a text file. Scheme-less entries are omitted.',
       },
       {
         step: 2,
-        title: 'Configure domain extraction',
-        description: 'Choose whether to strip "www.", extract root domains only, or keep full subdomains.',
+        title: 'Configure extraction options',
+        description:
+          'Open the options tray to choose whether to Strip "www." prefix, extract Root domain only, or Deduplicate extracted domain list.',
       },
       {
         step: 3,
-        title: 'Generate domain list',
-        description: 'Click "Extract Domains" to compute unique hostnames across your entire dataset.',
+        title: 'Click Extract Domains',
+        description:
+          'Click "Extract Domains" to generate a list of extracted hostnames or root domains from accepted absolute URLs.',
       },
       {
         step: 4,
-        title: 'Download domain inventory',
-        description: 'Download the deduplicated domain list as TXT or CSV with frequency counts.',
+        title: 'Review and export',
+        description:
+          'Review the extracted list count in the preview panel, then copy the results to your clipboard or download them as a TXT or CSV file.',
       },
     ],
     faqs: [
       {
-        question: 'Can I extract root domains instead of full subdomains?',
+        question: 'What does Domain & Hostname Extractor extract by default?',
         answer:
-          'Yes. Enabling the "Root Domain Only" toggle will condense subdomains like blog.example.com into example.com, with smart recognition for multi-part TLDs like .co.uk and .com.au.',
+          'By default, the tool extracts the full lowercase hostname from each valid absolute HTTP or HTTPS URL. The www. prefix is stripped by default to merge www and root variations, while distinct subdomains (such as blog.example.com) are preserved.',
       },
       {
-        question: 'Are extracted domains automatically deduplicated?',
+        question: 'What is the difference between a hostname and Root Domain Only mode?',
         answer:
-          'Yes, by default only unique domains are exported so each distinct website appears exactly once.',
+          'A hostname includes subdomains (for example, blog.example.com remains blog.example.com). When you enable Root Domain Only, the tool attempts to condense subdomains into the base domain (such as example.com) using a heuristic for common suffixes like .co.uk and .com.au.',
+      },
+      {
+        question: 'Why are URLs without http:// or https:// missing from the results?',
+        answer:
+          'The extractor requires absolute URLs with an explicit http:// or https:// scheme to safely parse hostnames. Scheme-less lines (like example.com/page), relative paths, FTP links, and invalid text entries are skipped.',
+      },
+      {
+        question: 'How is the "www." prefix handled?',
+        answer:
+          'The "www." prefix is stripped by default so that www.example.com and example.com map to the same host. You can uncheck "Strip www. prefix" in the extraction options tray if you prefer to retain it.',
+      },
+      {
+        question: 'Are extracted hostnames automatically deduplicated?',
+        answer:
+          'Yes. By default, duplicate hostnames are removed so that each unique host appears only once, preserving the order of its first occurrence. You can disable deduplication in the options tray if you want every line preserved.',
+      },
+      {
+        question: 'What happens to port numbers, paths, query parameters, and fragments?',
+        answer:
+          'All non-hostname components—including port numbers (such as :8080), URL paths, query strings, and fragment anchors (#)—are completely excluded from extracted output.',
+      },
+      {
+        question: 'Does the tool check DNS, WHOIS, registration, or whether a website is online?',
+        answer:
+          'No. The tool performs client-side string extraction in your browser without network activity. It does not verify domain registration, query WHOIS records, resolve DNS, or check server status.',
+      },
+      {
+        question: 'How many URLs can I process, and is my URL list uploaded?',
+        answer:
+          'The interface supports lists of up to 5,000 URLs, and extraction runs locally in your browser. Your URL list is not uploaded to our servers for processing.',
       },
     ],
-    relatedToolIds: ['validator', 'cleaner', 'normalizer', 'home'],
+    relatedToolIds: ['validator', 'normalizer', 'cleaner', 'dedup', 'opener'],
   },
   normalizer: {
     id: 'normalizer',
