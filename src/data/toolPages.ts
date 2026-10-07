@@ -1178,48 +1178,179 @@ export const TOOL_PAGES: Record<string, ToolPageConfig> = {
     path: '/bulk-url-validator',
     name: 'Bulk URL Validator',
     shortTitle: 'URL Validator',
-    h1: 'Bulk URL Validator – Identify Malformed & Invalid Links',
-    metaTitle: 'Bulk URL Validator – Check URL Syntax in Bulk',
+    h1: 'Bulk URL Validator – Check URL Syntax in Bulk',
+    metaTitle: 'Bulk URL Validator – Check HTTP & HTTPS URL Syntax',
     metaDescription:
-      'Validate syntax and structure for up to 5,000 URLs locally in your browser. Separate valid and invalid links with specific error explanations.',
+      'Validate HTTP and HTTPS URL syntax for up to 5,000 entries in your browser. Separate accepted and invalid URLs and review validation reasons.',
     summary:
-      'Verify the technical syntax and structural validity of thousands of URLs. Instantly separate well-formed web addresses from broken or corrupted strings.',
+      'Check bulk URL lists for absolute HTTP and HTTPS syntax. Separate accepted web addresses from malformed or unsupported entries and review validation reasons directly in your browser.',
     defaultAction: 'validate',
+    aboutDetails: [
+      'Imported link collections, spreadsheet exports, marketing data files, and sitemaps frequently accumulate formatting flaws that disrupt downstream processing. Bulk URL Validator checks lists of web addresses against standard URL syntax rules, allowing you to isolate entries that match the toolkit’s accepted absolute HTTP and HTTPS format from malformed strings before loading them into databases, crawlers, or outreach tools.',
+      'Under the validator’s rules, a web address is accepted if it specifies an explicit HTTP or HTTPS scheme (matched case-insensitively), contains a parseable hostname, avoids unencoded whitespace, and conforms to WHATWG URL parsing specifications. Localhost, single-label intranet names, IPv4 and IPv6 addresses, and custom port numbers can be accepted when syntactically parseable. The validator does not require or verify a public top-level domain (TLD), and acceptance by the tool indicates syntactic compliance rather than confirming that a destination exists or is currently online.',
+      'All validation runs entirely client-side using JavaScript in your web browser memory. The tool does not perform DNS lookups, make HTTP network requests, verify HTTP status codes, follow redirects, inspect SSL/TLS certificates, query domain registries, or run malware scans. Your URL list is processed directly on your device and is not uploaded to our servers for processing.',
+    ],
+    examples: [
+      {
+        explanation: 'Accepted because it has an explicit HTTPS scheme, parseable hostname, and supported URL structure. Query parameters and fragments are allowed.',
+        input: 'https://example.com/path?x=1#section',
+        output: 'Valid',
+      },
+      {
+        explanation: 'Scheme-less input is rejected because the validator requires explicit http:// or https://.',
+        input: 'example.com/page',
+        output: 'Invalid — Invalid absolute HTTP/HTTPS URL',
+      },
+      {
+        explanation: 'Raw whitespace is rejected; this validator does not auto-encode or repair it.',
+        input: 'https://example.com/a b',
+        output: 'Invalid — Invalid absolute HTTP/HTTPS URL (contains unencoded whitespace)',
+      },
+      {
+        explanation: 'FTP may be parseable as a URL generally, but this validator accepts only HTTP and HTTPS.',
+        input: 'ftp://example.com/file',
+        output: 'Invalid — Invalid absolute HTTP/HTTPS URL',
+      },
+    ],
+    boundaries: [
+      {
+        title: 'Requires Absolute HTTP or HTTPS URLs',
+        description:
+          'The validator processes only absolute addresses beginning with http:// or https://. Scheme-less entries (such as example.com), relative paths (/about), and non-HTTP protocols (such as ftp://, mailto:, or file:) are flagged as invalid.',
+      },
+      {
+        title: 'Does Not Check Whether a Page Is Online',
+        description:
+          'No HTTP requests or server status checks occur. A syntactically accepted URL may still return a 404 Not Found error, a 500 server error, fail to load, or point to an inactive domain.',
+      },
+      {
+        title: 'Does Not Verify DNS, Registration, or Public TLD Validity',
+        description:
+          'The tool does not resolve DNS records, query WHOIS data, or check a public TLD registry. Addresses with localhost, single-label hostnames, IP addresses, or unverified extensions may be accepted if they parse under standard URL syntax rules.',
+      },
+      {
+        title: 'Does Not Auto-Repair Invalid URLs',
+        description:
+          'The validator inspects entries without auto-prefixing missing schemes, encoding unescaped spaces, correcting typos, or repairing corrupted strings. Invalid entries are preserved verbatim for inspection.',
+      },
+      {
+        title: 'Does Not Deduplicate or Remove Tracking Parameters',
+        description:
+          'Repeated lines remain duplicated in both valid and invalid sets unless you use Duplicate URL Remover. Query strings and tracking tokens remain intact unless you use UTM & Tracking Parameter Remover.',
+      },
+      {
+        title: 'Does Not Assess Security or Final Destinations',
+        description:
+          'The tool does not perform malware or phishing reputation scanning, inspect SSL/TLS certificates, follow redirect chains, or inspect canonical tags.',
+      },
+    ],
+    prepWorkflows: [
+      {
+        title: 'Clean Whitespace & Formatting',
+        description:
+          'Trim leading/trailing whitespace, eliminate empty rows, encode unescaped spaces, and fix certain formatting errors before re-validating.',
+        linkPath: '/url-cleaner',
+      },
+      {
+        title: 'Remove Duplicate URLs',
+        description:
+          'Eliminate repeated links; Bulk URL Validator evaluates syntax line by line without removing duplicate entries.',
+        linkPath: '/duplicate-url-remover',
+      },
+      {
+        title: 'Remove Tracking Parameters',
+        description:
+          'Strip marketing and campaign tokens; validation checks structure but does not remove query parameters.',
+        linkPath: '/utm-remover',
+      },
+      {
+        title: 'Standardize URL Formatting',
+        description:
+          'Lowercase hostnames and strip default ports across accepted links; Normalizer does not repair arbitrary scheme-less or invalid entries.',
+        linkPath: '/url-normalizer',
+      },
+      {
+        title: 'Extract Domains & Hostnames',
+        description:
+          'Isolate distinct hostnames or root domains from accepted HTTP and HTTPS addresses.',
+        linkPath: '/domain-extractor',
+      },
+      {
+        title: 'Open Accepted URLs in Batches',
+        description:
+          'Launch accepted web links in controlled browser tab batches for manual review; Validator does not verify live reachability.',
+        linkPath: '/bulk-url-opener',
+      },
+    ],
     howToSteps: [
       {
         step: 1,
-        title: 'Enter URLs to validate',
-        description: 'Paste your bulk link list into the validator textarea.',
+        title: 'Paste or import URLs',
+        description:
+          'Paste your web addresses into the editor (one entry per line) or import a text file. The interface supports lists of up to 5,000 URLs.',
       },
       {
         step: 2,
-        title: 'Run syntax checks',
-        description: 'Click "Find Invalid URLs" to validate protocol, hostname syntax, port specifications, and character encoding.',
+        title: 'Click Find Invalid',
+        description:
+          'Click "Find Invalid" in the action toolbar to evaluate your entries against the validator’s absolute HTTP and HTTPS syntax rules.',
       },
       {
         step: 3,
-        title: 'Filter valid vs. invalid',
-        description: 'Switch tabs to inspect valid links or drill down into invalid links with line numbers and specific failure reasons.',
+        title: 'Review accepted and invalid entries',
+        description:
+          'Inspect accepted links in the Raw Text and Table Preview tabs, or switch to the Invalid URLs tab to review line numbers, failure reasons, and raw invalid text.',
       },
       {
         step: 4,
-        title: 'Export clean or error lists',
-        description: 'Download the valid URLs for deployment or download the invalid entries for correction.',
+        title: 'Copy or download results',
+        description:
+          'Copy accepted entries to your clipboard, download them as a TXT or CSV file, or click "Download Invalid List" in the Invalid URLs tab to export errors.',
       },
     ],
     faqs: [
       {
-        question: 'Does the validator check if the web page is actually online (HTTP 200)?',
+        question: 'Does the validator check whether a URL is live or online?',
         answer:
-          'No. Because URL processing happens locally in your browser for privacy and efficiency, it validates structural and syntactic URL compliance. Checking live HTTP status codes would require external network requests and could expose your URLs.',
+          'No. The validator performs client-side syntax checks only. It does not send HTTP network requests, verify server responses (such as HTTP 200 or 404), follow redirects, or verify whether a website is currently accessible.',
       },
       {
-        question: 'What types of errors are detected?',
+        question: 'Which URL protocols does the validator accept?',
         answer:
-          'The validator catches missing protocols, invalid domain TLDs, illegal characters, unencoded spaces, invalid port numbers, and malformed query strings.',
+          'The validator strictly accepts absolute HTTP and HTTPS web addresses. Protocol matching is case-insensitive (http:// and https://). Other schemes—including FTP, mailto, tel, javascript, data, and file—are classified as invalid.',
+      },
+      {
+        question: 'Why are URLs without http:// or https:// marked invalid?',
+        answer:
+          'The validator requires an explicit protocol scheme to determine valid web address syntax. Scheme-less entries (such as example.com or www.example.com) and relative paths (/about) are flagged as invalid because the tool does not guess or auto-prefix protocols.',
+      },
+      {
+        question: 'What kinds of syntax problems can be flagged?',
+        answer:
+          'The validator flags missing or unsupported protocols, unencoded whitespace, invalid port numbers (such as out-of-range values like :99999), and malformed structures rejected by WHATWG URL parsing. Failures are grouped into three user-visible categories, with many issues receiving the generic "Invalid absolute HTTP/HTTPS URL" message.',
+      },
+      {
+        question: 'Are localhost, IP addresses, and custom ports supported?',
+        answer:
+          'Yes. Syntactically parseable local and intranet addresses—such as http://localhost, single-label hostnames, IPv4 addresses (http://127.0.0.1), bracketed IPv6 addresses, and valid custom ports (such as :3000 or :8080)—are accepted. Out-of-range port numbers are rejected as invalid.',
+      },
+      {
+        question: 'Does the validator fix invalid URLs automatically?',
+        answer:
+          'No. The tool is an inspector, not a repair utility. It does not add missing protocols, encode spaces, normalize paths, or remove malformed characters. You can copy or download your invalid list to fix entries or use companion tools like Bulk URL Cleaner.',
+      },
+      {
+        question: 'Does the validator verify domain registration or TLD validity?',
+        answer:
+          'No. The validator operates without DNS lookups, WHOIS queries, or ICANN registry verification. Acceptance by the validator indicates syntactic compliance under standard URL parsing, not that a public domain name is registered or active.',
+      },
+      {
+        question: 'How many URLs can I validate, and is my URL list uploaded?',
+        answer:
+          'The interface supports lists of up to 5,000 URLs, and validation runs locally in your browser. Your URL list is not uploaded to our servers for processing.',
       },
     ],
-    relatedToolIds: ['cleaner', 'extractor', 'opener', 'home'],
+    relatedToolIds: ['cleaner', 'dedup', 'utm', 'normalizer', 'extractor', 'opener'],
   },
   privacy: {
     id: 'privacy',
