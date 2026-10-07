@@ -53,7 +53,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       icon: Search,
       color: 'blue',
       description:
-        'Audit large crawl lists, clean exported sitemaps, verify canonical URL structures, standardize protocol formatting, and deduplicate link inventories before site migrations.',
+        'Audit large crawl lists, clean exported sitemaps, inspect URL formatting, standardize protocol schemes, and deduplicate link inventories before site migrations.',
     },
     {
       title: 'Web Developers & Engineers',
@@ -83,7 +83,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       name: 'Bulk URL Opener',
       path: '/bulk-url-opener',
       icon: ExternalLink,
-      desc: 'Open multiple web links in controlled batches (10, 25, or 50 tabs) to prevent browser freezes and handle popup permissions safely.',
+      desc: 'Open multiple web links in controlled batches (10, 25, or 50 tabs) to keep large link reviews manageable and provide popup permission guidance.',
     },
     {
       name: 'Bulk URL Cleaner',
@@ -113,13 +113,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       name: 'Bulk URL Normalizer',
       path: '/url-normalizer',
       icon: SlidersHorizontal,
-      desc: 'Standardize URL formatting, lowercase domain hostnames, strip default ports (:80/:443), and safely normalize protocols.',
+      desc: 'Standardize URL formatting, lowercase domain hostnames, strip matching default ports (:80/:443), and optionally convert HTTP URLs to HTTPS.',
     },
     {
       name: 'Bulk URL Validator',
       path: '/bulk-url-validator',
       icon: FileCheck2,
-      desc: 'Verify syntax compliance across thousands of web addresses, separating valid links from broken or malformed entries.',
+      desc: 'Check syntax compliance across web address lists, separating accepted links from malformed or unsupported entries.',
     },
   ];
 
