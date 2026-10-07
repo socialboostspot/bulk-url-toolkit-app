@@ -999,48 +999,179 @@ export const TOOL_PAGES: Record<string, ToolPageConfig> = {
     path: '/url-normalizer',
     name: 'Bulk URL Normalizer',
     shortTitle: 'URL Normalizer',
-    h1: 'Bulk URL Normalizer – Standardize Hostnames, Ports & Trailing Slashes',
-    metaTitle: 'Bulk URL Normalizer – Standardize URL Syntax & Safe Protocols',
+    h1: 'Bulk URL Normalizer – Standardize URL Formatting in Bulk',
+    metaTitle: 'Bulk URL Normalizer – Standardize URL Formatting',
     metaDescription:
-      'Normalize bulk URLs without changing destination endpoints. Lowercase hostnames, remove default ports (:80/:443), and safely standardize protocols.',
+      'Normalize HTTP and HTTPS URLs in bulk. Lowercase hostnames, remove matching default ports, and optionally adjust trailing slashes, query order, or HTTPS.',
     summary:
-      'Standardize URL formatting for deduplication and sitemap hygiene without breaking endpoints. Handles protocols, lowercase hostnames, and default port numbers safely.',
+      'Normalize absolute HTTP and HTTPS URLs by lowercasing hostnames and removing matching default ports. Optionally remove non-root trailing slashes, sort query parameters, or convert HTTP to HTTPS.',
     defaultAction: 'normalize',
+    aboutDetails: [
+      'Preparing URL lists for data analysis, crawl-data reviews, backlink audits, spreadsheet cleanups, and comparison or deduplication workflows frequently requires consistent URL formatting. Variations in domain letter case, redundant default port numbers, inconsistent trailing slashes, or differing query parameter orders can cause identical web resources to appear as distinct entries.',
+      'Bulk URL Normalizer standardizes absolute HTTP and HTTPS web addresses directly in your browser. By default, the tool lowercases hostnames, removes matching default ports (:80 for HTTP and :443 for HTTPS), preserves original HTTP schemes, preserves path casing, preserves existing trailing slashes, maintains original query parameter order, and keeps fragment anchors intact. Through the normalization options tray, you can also enable optional settings to "Convert HTTP to HTTPS (Explicit Opt-In)", "Strip trailing slash on path endpoints", or "Sort query parameters alphabetically".',
+      'All normalization runs entirely client-side using JavaScript in your web browser memory. The tool does not perform DNS lookups, send HTTP network requests, follow redirects, inspect canonical tags, or verify server availability. Your URL list is processed directly on your device and is not uploaded to our servers for processing.',
+    ],
+    examples: [
+      {
+        explanation: 'Default behavior lowercases the hostname and removes default port :80 for HTTP while strictly preserving path casing',
+        input: 'http://EXAMPLE.COM:80/Path',
+        output: 'http://example.com/Path',
+      },
+      {
+        explanation: 'Default behavior preserves HTTP schemes without modification; HTTP is not converted to HTTPS unless explicitly enabled',
+        input: 'http://example.com/page',
+        output: 'http://example.com/page',
+      },
+      {
+        explanation: 'Optional "Strip trailing slash on path endpoints" setting removes trailing slashes from subpaths, while root "/" is not removed',
+        input: 'https://example.com/docs/',
+        output: 'https://example.com/docs',
+      },
+      {
+        explanation: 'Optional "Sort query parameters alphabetically" setting sorts parameters by key; sorting is off by default and preserves original parameter order',
+        input: 'https://example.com/path?z=1&a=2',
+        output: 'https://example.com/path?a=2&z=1',
+      },
+    ],
+    boundaries: [
+      {
+        title: 'Requires Absolute HTTP or HTTPS URLs for Normalization',
+        description:
+          'The normalizer processes only absolute web addresses starting with http:// or https://. Scheme-less entries (such as example.com/page), relative paths (/about), non-HTTP protocols (such as ftp://), and malformed lines are not normalized. They are preserved unchanged in your output list and are not counted as modified.',
+      },
+      {
+        title: 'Does Not Lowercase URL Paths',
+        description:
+          'While hostnames are converted to lowercase under standard URL conventions, URL path segments retain their original casing because web servers can treat path casing as case-sensitive.',
+      },
+      {
+        title: 'Does Not Force HTTPS by Default',
+        description:
+          'HTTP URLs remain HTTP unless the "Convert HTTP to HTTPS (Explicit Opt-In)" option is explicitly enabled. Converting schemes is an optional user choice and is not assumed to be appropriate for all destinations.',
+      },
+      {
+        title: 'Preserves Non-Default Ports',
+        description:
+          'The default port removal rule removes matching standard ports (:80 for HTTP and :443 for HTTPS). Non-default port numbers such as :8080, :3000, and :8443 are preserved.',
+      },
+      {
+        title: 'Does Not Remove Query Parameters',
+        description:
+          'Query parameters remain attached to URLs. Optional sorting reorders parameters alphabetically by key, but parameters are not stripped. Use UTM & Tracking Parameter Remover if you want to remove marketing or campaign tokens.',
+      },
+      {
+        title: 'Does Not Check Destinations',
+        description:
+          'The normalizer performs client-side string transformations only. It does not perform DNS lookups, HTTP network requests, server status checks, redirect resolution, canonical-tag inspection, or website availability checks.',
+      },
+    ],
+    prepWorkflows: [
+      {
+        title: 'Clean Whitespace & Formatting',
+        description:
+          'Trim leading/trailing whitespace, remove blank lines, encode unescaped spaces, and collapse duplicate path slashes.',
+        linkPath: '/url-cleaner',
+      },
+      {
+        title: 'Remove Tracking Parameters',
+        description:
+          'Strip supported marketing and campaign parameters; Normalizer itself does not remove query parameters.',
+        linkPath: '/utm-remover',
+      },
+      {
+        title: 'Remove Duplicate URLs',
+        description:
+          'Deduplicate identical links; normalization standardizes formatting but does not automatically deduplicate output.',
+        linkPath: '/duplicate-url-remover',
+      },
+      {
+        title: 'Extract Domains & Hostnames',
+        description:
+          'Isolate distinct hostnames or root domains from your normalized web links.',
+        linkPath: '/domain-extractor',
+      },
+      {
+        title: 'Validate URL Syntax',
+        description:
+          'Check URL syntax and separate entries the toolkit identifies as valid or invalid.',
+        linkPath: '/bulk-url-validator',
+      },
+      {
+        title: 'Open URLs in Batches',
+        description:
+          'Launch your formatted links in controlled browser tab batches for manual review without live verification during normalization.',
+        linkPath: '/bulk-url-opener',
+      },
+    ],
     howToSteps: [
       {
         step: 1,
-        title: 'Paste URLs for normalization',
-        description: 'Input links that have inconsistent case, mixed default ports, or trailing slash variations.',
+        title: 'Paste or import URLs',
+        description:
+          'Paste web addresses into the editor (one per line) or import a text file. Absolute HTTP/HTTPS URLs are normalized, while unsupported or invalid lines remain unchanged.',
       },
       {
         step: 2,
-        title: 'Verify protocol settings',
-        description: 'By default, HTTP is preserved. Toggle "Convert HTTP to HTTPS" only if you specifically require it.',
+        title: 'Choose normalization options',
+        description:
+          'Open the options tray to review settings. Default rules lowercase hostnames and remove default ports (:80/:443). Optional toggles let you sort query parameters alphabetically, strip trailing slashes on path endpoints, or convert HTTP to HTTPS.',
       },
       {
         step: 3,
-        title: 'Normalize formatting',
-        description: 'Click "Normalize URLs" to lowercase domain names, strip redundant ports :80 and :443, and sort query parameters.',
+        title: 'Click Normalize URLs',
+        description:
+          'Click "Normalize URLs" to lowercase domain names and strip matching default ports, retaining path casing, query parameter order, and trailing slashes by default (or applying optional sorting and slash rules when enabled).',
       },
       {
         step: 4,
-        title: 'Export standardized list',
-        description: 'Copy or download canonicalized URLs ready for SEO crawlers and databases.',
+        title: 'Review and export',
+        description:
+          'Review the modified lines count, inspect formatted links in the preview pane, and copy the results to your clipboard or download them as a text file.',
       },
     ],
     faqs: [
       {
         question: 'Why does the normalizer lowercase hostnames but not paths?',
         answer:
-          'Domain names (hostnames) are case-insensitive in standard URL handling, but URL path segments can be case-sensitive depending on the hosting server operating system (e.g. Linux). Lowercasing paths could cause 404 errors.',
+          'Domain names (hostnames) are case-insensitive under internet standards, but URL path segments can be case-sensitive depending on the destination web server operating system. Lowercasing paths could cause 404 errors, so path casing is strictly preserved.',
       },
       {
-        question: 'Does the normalizer force HTTPS on HTTP links?',
+        question: 'Does the normalizer automatically convert HTTP to HTTPS?',
         answer:
-          'No. To prevent breaking older or specialized servers, HTTP links remain HTTP unless you explicitly check the "Convert HTTP to HTTPS" option.',
+          'No. HTTP links remain HTTP by default. Converting HTTP to HTTPS is an optional setting that changes the protocol scheme, and should only be enabled when you know the destination server supports HTTPS.',
+      },
+      {
+        question: 'Which port numbers are removed?',
+        answer:
+          'When standard default port stripping is enabled, the normalizer removes port :80 from HTTP URLs and port :443 from HTTPS URLs. Non-default ports (such as :8080, :3000, or :8443) are preserved because they specify explicit destination ports.',
+      },
+      {
+        question: 'How are trailing slashes handled?',
+        answer:
+          'By default, existing trailing slashes are preserved. When the optional "Strip trailing slash on path endpoints" setting is enabled, trailing slashes are removed from subpaths (such as /docs/ to /docs), while the root slash (/) is retained. Additionally, WHATWG URL parsing may serialize a bare domain such as https://example.com with a trailing slash as https://example.com/.',
+      },
+      {
+        question: 'Are query parameters sorted or removed?',
+        answer:
+          'Query parameters are not removed by the normalizer. Their original order is preserved by default. You can optionally enable alphabetical sorting by key if you want consistent parameter ordering. To strip marketing or campaign parameters, use UTM & Tracking Parameter Remover.',
+      },
+      {
+        question: 'What happens to invalid, scheme-less, relative, or FTP URLs?',
+        answer:
+          'Inputs that are not valid absolute HTTP or HTTPS URLs—such as scheme-less addresses (example.com/page), relative paths (/about), non-HTTP protocols (ftp://), or invalid text—are preserved unchanged in your output list and are not counted as modified.',
+      },
+      {
+        question: 'Does the normalizer check whether URLs are online or determine their canonical URL?',
+        answer:
+          'No. The tool performs client-side string formatting only. It does not perform DNS lookups, make HTTP network requests, follow redirects, inspect canonical tags, or verify server availability.',
+      },
+      {
+        question: 'How many URLs can I process, and is my URL list uploaded?',
+        answer:
+          'The interface supports lists of up to 5,000 URLs, and normalization runs locally in your browser. Your URL list is not uploaded to our servers for processing.',
       },
     ],
-    relatedToolIds: ['cleaner', 'utm', 'dedup', 'home'],
+    relatedToolIds: ['cleaner', 'utm', 'dedup', 'extractor', 'validator', 'opener'],
   },
   validator: {
     id: 'validator',
